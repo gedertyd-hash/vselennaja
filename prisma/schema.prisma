@@ -1,0 +1,92 @@
+// Prisma schema — SQLite for local development.
+// Switch the datasource provider + DATABASE_URL to Postgres when moving to production.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  ADMIN
+  STUDENT
+}
+
+enum LessonType {
+  VIDEO
+  TEXT
+  GUIDE
+  WORKSHOP
+}
+
+model User {
+  id               String   @id @default(cuid())
+  email            String?  @unique
+  passwordHash     String?
+  telegramId       String?  @unique
+  telegramUsername String?
+  name             String
+  avatarUrl        String?
+  role             Role     @default(STUDENT)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  progress         LessonProgress[]
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  coverImage  String?
+  published   Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  modules     Module[]
+}
+
+model Module {
+  id       String @id @default(cuid())
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title    String
+  order    Int    @default(0)
+
+  lessons  Lesson[]
+}
+
+model Lesson {
+  id        String     @id @default(cuid())
+  moduleId  String
+  module    Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  slug      String
+  title     String
+  type      LessonType @default(TEXT)
+  content   String?
+  videoUrl  String?
+  published Boolean    @default(false)
+  order     Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  progress  LessonProgress[]
+
+  @@unique([moduleId, slug])
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  completedAt DateTime @default(now())
+
+  @@unique([userId, lessonId])
+}
