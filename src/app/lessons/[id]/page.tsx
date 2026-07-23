@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/dal";
 import { completeLessonAction, uncompleteLessonAction } from "@/app/actions/progress";
+import { MarkdownContent } from "@/components/MarkdownContent";
 
 export default async function LessonPage({
   params,
@@ -58,8 +59,8 @@ export default async function LessonPage({
       )}
 
       {lesson.content && (
-        <div className="mt-6 whitespace-pre-wrap leading-relaxed text-cream/90">
-          {lesson.content}
+        <div className="mt-6">
+          <MarkdownContent content={lesson.content} />
         </div>
       )}
 

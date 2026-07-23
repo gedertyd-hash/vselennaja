@@ -5,6 +5,7 @@ import { requireSession } from "@/lib/dal";
 import { IconStar } from "@/components/icons";
 import { toggleFavoriteAction } from "@/app/actions/favorites";
 import { completeLessonAction, uncompleteLessonAction } from "@/app/actions/progress";
+import { MarkdownContent } from "@/components/MarkdownContent";
 import { MATERIAL_TYPE_META, LEVEL_LABEL, LEVEL_CLASSES } from "@/lib/materials";
 
 export default async function MaterialDetailPage({
@@ -98,11 +99,7 @@ export default async function MaterialDetailPage({
                 />
               </div>
             )}
-            {lesson.content && (
-              <div className="whitespace-pre-wrap leading-relaxed text-cream/90">
-                {lesson.content}
-              </div>
-            )}
+            {lesson.content && <MarkdownContent content={lesson.content} />}
 
             <form
               action={

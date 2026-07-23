@@ -38,7 +38,7 @@ export function CreateMaterialForm() {
           <input name="videoUrl" placeholder="Ссылка на видео (embed) — необязательно" className={inputClass} />
           <textarea
             name="content"
-            placeholder="Текст материала"
+            placeholder="Текст материала (поддерживается Markdown: **жирный**, ## заголовок, - списки)"
             rows={4}
             className={inputClass}
           />

@@ -82,7 +82,7 @@ export default async function AdminCoursePage({
             <label className="block text-sm font-medium">Ссылка на видео (embed)</label>
             <input name="videoUrl" defaultValue={lesson.videoUrl ?? ""} className={inputClass} />
 
-            <label className="block text-sm font-medium">Текст материала</label>
+            <label className="block text-sm font-medium">Текст материала (Markdown: **жирный**, ## заголовок, - списки)</label>
             <textarea name="content" defaultValue={lesson.content ?? ""} rows={10} className={inputClass} />
 
             <button
@@ -161,7 +161,7 @@ export default async function AdminCoursePage({
                   ))}
                 </select>
                 <input name="videoUrl" placeholder="Ссылка на видео (embed, необязательно)" className={inputClass} />
-                <textarea name="content" placeholder="Текст урока / описание" rows={3} className={inputClass} />
+                <textarea name="content" placeholder="Текст урока (поддерживается Markdown)" rows={3} className={inputClass} />
                 <button
                   type="submit"
                   className="rounded-full bg-yolk text-yolk-ink px-4 py-1.5 text-xs font-semibold hover:bg-yolk-bright transition"
