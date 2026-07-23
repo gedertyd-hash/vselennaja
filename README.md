@@ -3,31 +3,48 @@
 Платформа с гайдами, курсами, юзкейсами и воркшопами, которая открывается
 как Telegram Mini App (внутри Telegram) или как обычный сайт с email/паролем.
 
-Стек: Next.js 16 (App Router) · Prisma 7 + SQLite (dev) · Tailwind CSS ·
+Стек: Next.js 16 (App Router) · Prisma 7 + PostgreSQL · Tailwind CSS ·
 собственная сессионная аутентификация (`jose` + httpOnly cookie).
 
-## Запуск
+## Запуск (локально)
+
+Нужна доступная PostgreSQL-база (например, бесплатная на [neon.tech](https://neon.tech)).
 
 ```bash
 npm install
+# положить строку подключения в .env как DATABASE_URL (см. .env.example)
 npx prisma generate
-npx prisma migrate dev
-npx prisma db seed   # создаст админа и демо-материалы
+npx prisma db push
 npm run dev
 ```
 
-Открыть [http://localhost:3000](http://localhost:3000).
+Открыть [http://localhost:3000](http://localhost:3000), зарегистрироваться —
+первый зарегистрированный пользователь автоматически получает роль `ADMIN`.
+Затем в `/admin` нажать **«Заполнить демо-материалами»** — загрузит стартовый
+набор гайдов и курс «Первая неделя с ИИ» из `src/lib/demo-content.ts`.
 
-Демо-админ после сида: `admin@iishnitsa.local` / `admin12345`. Первый
-зарегистрированный пользователь (через `/register` или сид) автоматически
-получает роль `ADMIN`, все последующие — `STUDENT`.
+## Деплой на Vercel
+
+1. Завести бесплатную Postgres (neon.tech, Supabase, или через Vercel → Storage
+   → Postgres прямо в проекте) и скопировать connection string.
+2. На vercel.com → **Add New Project** → импортировать репозиторий.
+3. В **Environment Variables** добавить:
+   - `DATABASE_URL` — строка подключения из шага 1
+   - `SESSION_SECRET` — любая случайная строка (`openssl rand -base64 32`)
+4. В **Build & Development Settings** → Build Command указать:
+   `prisma generate && prisma db push --accept-data-loss && next build`
+5. Deploy. После первого успешного деплоя — зарегистрироваться на живом сайте
+   (станете админом автоматически) и нажать **«Заполнить демо-материалами»** в `/admin`.
+
+Дальше каждый `git push` в ветку деплоя обновляет сайт и синхронизирует схему
+автоматически — никаких ручных миграций руками не нужно.
 
 ## Переменные окружения (`.env`)
 
 | Переменная | Назначение |
 |---|---|
-| `DATABASE_URL` | Строка подключения к БД (SQLite для разработки) |
-| `SESSION_SECRET` | Секрет для подписи сессионных JWT (сгенерирован при инициализации) |
+| `DATABASE_URL` | Строка подключения к PostgreSQL |
+| `SESSION_SECRET` | Секрет для подписи сессионных JWT |
 | `TELEGRAM_BOT_TOKEN` | Токен бота — нужен для проверки Telegram Mini App `initData`. Пока пустой. |
 | `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` | Юзернейм бота (для ссылок вида `t.me/<bot>`). Пока пустой. |
 
@@ -42,8 +59,11 @@ npm run dev
   страница — модули/уроки для курсов, контент сразу для гайдов/юзкейсов/воркшопов).
 - `src/app/lessons/[id]` — отдельный урок внутри курса.
 - `src/app/favorites`, `src/app/profile` — избранное и профиль.
-- `src/app/admin` — создание/публикация материалов, `src/app/admin/courses/[id]`
-  — управление модулями/уроками курса или контентом одностраничного материала.
+- `src/app/admin` — создание/публикация материалов + кнопка загрузки демо-контента,
+  `src/app/admin/courses/[id]` — управление модулями/уроками курса или
+  контентом одностраничного материала.
+- `src/lib/demo-content.ts` — источник правды для стартового набора материалов
+  (используется и `prisma db seed`, и кнопкой в админке).
 - `src/app/actions` — Server Actions (auth, CRUD материалов, избранное, прогресс).
 - `src/app/api/auth/telegram` — обмен Telegram `initData` на сессию (Mini App).
 - `src/lib/session.ts`, `src/lib/dal.ts` — сессии и авторизационные проверки.
@@ -74,7 +94,7 @@ npm run dev
 ## Что дальше (следующий этап)
 
 Платформа сейчас не завязана на бота и оплату — это осознанно, чтобы
-сначала обкатать саму платформу. Следующие шаги:
+сначала обкатать саму платформу и наполнение. Следующие шаги:
 
 1. Создать Telegram-бота, получить `TELEGRAM_BOT_TOKEN` → заполнить `.env`
    → Mini App авторизация заработает.
@@ -85,10 +105,7 @@ npm run dev
    `banChatMember`/`unbanChatMember`).
 4. Загрузка обложек материалов (сейчас `coverImage` в схеме есть, но карточки
    рисуют цветной градиент вместо картинки — можно добавить загрузку файла).
-5. Переезд с SQLite на PostgreSQL перед продакшеном (меняется только
-   `datasource.provider` в `prisma/schema.prisma`, `DATABASE_URL` и
-   driver adapter в `src/lib/prisma.ts` — с `@prisma/adapter-better-sqlite3`
-   на `@prisma/adapter-pg`).
+5. Формальные Prisma-миграции вместо `db push`, когда схема стабилизируется.
 
 ## Известное ограничение
 

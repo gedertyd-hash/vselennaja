@@ -1,13 +1,10 @@
-// Prisma schema — SQLite for local development.
-// Switch the datasource provider + DATABASE_URL to Postgres when moving to production.
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 enum Role {
