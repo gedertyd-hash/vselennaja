@@ -11,11 +11,11 @@ export default async function LandingPage() {
     <main className="flex-1 flex flex-col items-center justify-center gap-10 px-6 py-20 text-center relative overflow-hidden">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[560px] h-[560px] rounded-full opacity-20 blur-[120px]"
+        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[720px] rounded-full opacity-20 blur-[120px]"
         style={{ background: "var(--yolk)" }}
       />
 
-      <YolkMark className="w-28 h-28 sm:w-32 sm:h-32 relative" />
+      <YolkMark className="w-44 h-44 sm:w-56 sm:h-56 relative" />
 
       <div className="max-w-2xl space-y-5 relative">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-balance">
