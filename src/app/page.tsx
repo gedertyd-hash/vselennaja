@@ -15,7 +15,7 @@ export default async function LandingPage() {
         style={{ background: "var(--yolk)" }}
       />
 
-      <YolkMark className="w-14 h-14 relative" />
+      <YolkMark className="w-28 h-28 sm:w-32 sm:h-32 relative" />
 
       <div className="max-w-2xl space-y-5 relative">
         <h1 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight text-balance">

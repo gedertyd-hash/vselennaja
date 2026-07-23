@@ -126,9 +126,32 @@ export default async function MaterialDetailPage({
     );
   }
 
+  const allLessons = material.modules.flatMap((m) => m.lessons);
+  const totalLessons = allLessons.length;
+  const completedLessons = allLessons.filter((l) => l.progress.length > 0).length;
+  const progressPercent =
+    totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
   return (
     <main className="flex-1 px-8 py-10 max-w-2xl mx-auto w-full">
       {header}
+
+      {totalLessons > 0 && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between text-sm mb-2">
+            <span className="text-text-muted">Прогресс</span>
+            <span className="text-cream font-medium">
+              {completedLessons} из {totalLessons} · {progressPercent}%
+            </span>
+          </div>
+          <div className="h-2 rounded-full bg-bg-elevated-2 overflow-hidden">
+            <div
+              className="h-full bg-yolk rounded-full transition-all"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        </div>
+      )}
 
       <div className="mt-8 space-y-8">
         {material.modules.map((module) => (
