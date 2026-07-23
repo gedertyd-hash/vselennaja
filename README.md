@@ -1,7 +1,7 @@
-# Вселенная — обучающая платформа
+# ИИшница — закрытый клуб про ИИ
 
-Платформа с уроками, гайдами и воркшопами, которая открывается как Telegram
-Mini App (внутри Telegram) или как обычный сайт с email/паролем.
+Платформа с гайдами, курсами, юзкейсами и воркшопами, которая открывается
+как Telegram Mini App (внутри Telegram) или как обычный сайт с email/паролем.
 
 Стек: Next.js 16 (App Router) · Prisma 7 + SQLite (dev) · Tailwind CSS ·
 собственная сессионная аутентификация (`jose` + httpOnly cookie).
@@ -12,13 +12,13 @@ Mini App (внутри Telegram) или как обычный сайт с email/
 npm install
 npx prisma generate
 npx prisma migrate dev
-npx prisma db seed   # создаст админа и демо-курс
+npx prisma db seed   # создаст админа и демо-материалы
 npm run dev
 ```
 
 Открыть [http://localhost:3000](http://localhost:3000).
 
-Демо-админ после сида: `admin@vselennaja.local` / `admin12345`. Первый
+Демо-админ после сида: `admin@iishnitsa.local` / `admin12345`. Первый
 зарегистрированный пользователь (через `/register` или сид) автоматически
 получает роль `ADMIN`, все последующие — `STUDENT`.
 
@@ -33,17 +33,33 @@ npm run dev
 
 ## Структура
 
-- `src/app/(pages)` — страницы: `/`, `/login`, `/register`, `/courses`,
-  `/courses/[slug]`, `/lessons/[id]`, `/admin`, `/admin/courses/[id]`.
-- `src/app/actions` — Server Actions (регистрация/вход, CRUD курсов и
-  уроков, отметка прогресса).
-- `src/app/api/auth/telegram` — обмен Telegram `initData` на сессию (для
-  Mini App).
+- `src/app/page.tsx`, `/login`, `/register` — публичные страницы (без сайдбара).
+- `src/app/home` — Главная (дашборд): «Продолжить» + «Новое».
+- `src/app/start` — Старт (краткое приветствие для новых участников).
+- `src/app/materials` — хаб материалов + `/materials/guides`,
+  `/materials/courses`, `/materials/cases`, `/materials/workshops`
+  (карточки, фильтры по тегам) и `/materials/[slug]` (детальная
+  страница — модули/уроки для курсов, контент сразу для гайдов/юзкейсов/воркшопов).
+- `src/app/lessons/[id]` — отдельный урок внутри курса.
+- `src/app/favorites`, `src/app/profile` — избранное и профиль.
+- `src/app/admin` — создание/публикация материалов, `src/app/admin/courses/[id]`
+  — управление модулями/уроками курса или контентом одностраничного материала.
+- `src/app/actions` — Server Actions (auth, CRUD материалов, избранное, прогресс).
+- `src/app/api/auth/telegram` — обмен Telegram `initData` на сессию (Mini App).
 - `src/lib/session.ts`, `src/lib/dal.ts` — сессии и авторизационные проверки.
-- `src/proxy.ts` — защита маршрутов (`/courses`, `/lessons`, `/admin`
-  требуют сессию; `/admin/*` — роль `ADMIN`).
-- `prisma/schema.prisma` — модели: `User`, `Course`, `Module`, `Lesson`,
-  `LessonProgress`.
+- `src/proxy.ts` — защита маршрутов (всё кроме `/`, `/login`, `/register`
+  требует сессию; `/admin/*` — роль `ADMIN`).
+- `src/components/Sidebar.tsx`, `AppShell.tsx` — навигация приложения.
+- `prisma/schema.prisma` — модели: `User`, `Course` (= материал: `type`
+  COURSE/GUIDE/CASE/WORKSHOP, `level`, `tag`), `Module`, `Lesson`,
+  `LessonProgress`, `Favorite`.
+
+## Дизайн
+
+Тёмная тема, каламбур в названии («ИИшница» ~ «яичница») отражён в айдентике:
+тёплая палитра (жёлток/сливки на почти чёрном), акцентный шрифт **Unbounded**
+(кириллица «из коробки») для заголовков, **Manrope** для текста. Токены — в
+`src/app/globals.css`.
 
 ## Как это работает
 
@@ -67,7 +83,9 @@ npm run dev
 3. Автоматическая выдача/отзыв инвайта в закрытый Telegram-канал по
    статусу подписки (через Bot API: `createChatInviteLink`,
    `banChatMember`/`unbanChatMember`).
-4. Переезд с SQLite на PostgreSQL перед продакшеном (меняется только
+4. Загрузка обложек материалов (сейчас `coverImage` в схеме есть, но карточки
+   рисуют цветной градиент вместо картинки — можно добавить загрузку файла).
+5. Переезд с SQLite на PostgreSQL перед продакшеном (меняется только
    `datasource.provider` в `prisma/schema.prisma`, `DATABASE_URL` и
    driver adapter в `src/lib/prisma.ts` — с `@prisma/adapter-better-sqlite3`
    на `@prisma/adapter-pg`).

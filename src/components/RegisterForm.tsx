@@ -19,10 +19,10 @@ export function RegisterForm() {
           id="name"
           name="name"
           required
-          className="w-full rounded-lg border border-black/15 dark:border-white/20 bg-transparent px-3 py-2 text-sm"
+          className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm text-cream focus:border-yolk outline-none transition"
         />
         {state?.errors?.name && (
-          <p className="text-xs text-red-600">{state.errors.name[0]}</p>
+          <p className="text-xs text-paprika">{state.errors.name[0]}</p>
         )}
       </div>
 
@@ -35,10 +35,10 @@ export function RegisterForm() {
           name="email"
           type="email"
           required
-          className="w-full rounded-lg border border-black/15 dark:border-white/20 bg-transparent px-3 py-2 text-sm"
+          className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm text-cream focus:border-yolk outline-none transition"
         />
         {state?.errors?.email && (
-          <p className="text-xs text-red-600">{state.errors.email[0]}</p>
+          <p className="text-xs text-paprika">{state.errors.email[0]}</p>
         )}
       </div>
 
@@ -51,26 +51,26 @@ export function RegisterForm() {
           name="password"
           type="password"
           required
-          className="w-full rounded-lg border border-black/15 dark:border-white/20 bg-transparent px-3 py-2 text-sm"
+          className="w-full rounded-lg border border-border bg-bg-elevated px-3 py-2 text-sm text-cream focus:border-yolk outline-none transition"
         />
         {state?.errors?.password && (
-          <p className="text-xs text-red-600">{state.errors.password[0]}</p>
+          <p className="text-xs text-paprika">{state.errors.password[0]}</p>
         )}
       </div>
 
-      {state?.message && <p className="text-sm text-red-600">{state.message}</p>}
+      {state?.message && <p className="text-sm text-paprika">{state.message}</p>}
 
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-full bg-foreground text-background px-6 py-2.5 text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
+        className="w-full rounded-full bg-yolk text-yolk-ink px-6 py-2.5 text-sm font-semibold hover:bg-yolk-bright transition disabled:opacity-50"
       >
         {pending ? "Создаём аккаунт…" : "Зарегистрироваться"}
       </button>
 
-      <p className="text-sm text-center text-black/60 dark:text-white/60">
+      <p className="text-sm text-center text-text-muted">
         Уже есть аккаунт?{" "}
-        <Link href="/login" className="underline">
+        <Link href="/login" className="text-cream underline">
           Войти
         </Link>
       </p>

@@ -15,11 +15,22 @@ enum Role {
   STUDENT
 }
 
+enum MaterialType {
+  COURSE
+  GUIDE
+  CASE
+  WORKSHOP
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
 enum LessonType {
   VIDEO
   TEXT
-  GUIDE
-  WORKSHOP
 }
 
 model User {
@@ -35,20 +46,36 @@ model User {
   updatedAt        DateTime @updatedAt
 
   progress         LessonProgress[]
+  favorites        Favorite[]
 }
 
 model Course {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String       @id @default(cuid())
+  slug        String       @unique
   title       String
   description String
   coverImage  String?
-  published   Boolean  @default(false)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  type        MaterialType @default(COURSE)
+  level       Level        @default(BEGINNER)
+  tag         String?
+  published   Boolean      @default(false)
+  order       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   modules     Module[]
+  favorites   Favorite[]
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
 }
 
 model Module {

@@ -63,7 +63,7 @@ export async function registerAction(
   });
 
   await createSession(user.id);
-  redirect("/courses");
+  redirect("/home");
 }
 
 export async function loginAction(
@@ -92,7 +92,7 @@ export async function loginAction(
   }
 
   await createSession(user.id);
-  redirect("/courses");
+  redirect("/home");
 }
 
 export async function logoutAction() {

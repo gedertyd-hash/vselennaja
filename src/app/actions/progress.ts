@@ -13,8 +13,9 @@ export async function completeLessonAction(lessonId: string, courseSlug: string)
     create: { userId: session.userId, lessonId },
   });
 
-  revalidatePath(`/courses/${courseSlug}`);
+  revalidatePath(`/materials/${courseSlug}`);
   revalidatePath(`/lessons/${lessonId}`);
+  revalidatePath("/home");
 }
 
 export async function uncompleteLessonAction(lessonId: string, courseSlug: string) {
@@ -26,6 +27,7 @@ export async function uncompleteLessonAction(lessonId: string, courseSlug: strin
     })
     .catch(() => null);
 
-  revalidatePath(`/courses/${courseSlug}`);
+  revalidatePath(`/materials/${courseSlug}`);
   revalidatePath(`/lessons/${lessonId}`);
+  revalidatePath("/home");
 }

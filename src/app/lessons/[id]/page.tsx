@@ -36,18 +36,18 @@ export default async function LessonPage({
   const done = lesson.progress.length > 0;
 
   return (
-    <main className="flex-1 px-6 py-10 max-w-2xl mx-auto w-full">
+    <main className="flex-1 px-8 py-10 max-w-2xl mx-auto w-full">
       <Link
-        href={`/courses/${courseSlug}`}
-        className="text-sm text-black/50 dark:text-white/50 hover:underline"
+        href={`/materials/${courseSlug}`}
+        className="text-sm text-text-muted hover:text-cream transition"
       >
         ← {lesson.module.course.title}
       </Link>
 
-      <h1 className="text-2xl font-semibold mt-2">{lesson.title}</h1>
+      <h1 className="font-display text-2xl font-semibold mt-2">{lesson.title}</h1>
 
       {lesson.videoUrl && (
-        <div className="mt-6 aspect-video rounded-xl overflow-hidden border border-black/10 dark:border-white/10">
+        <div className="mt-6 aspect-video rounded-2xl overflow-hidden border border-border">
           <iframe
             src={lesson.videoUrl}
             className="w-full h-full"
@@ -58,7 +58,7 @@ export default async function LessonPage({
       )}
 
       {lesson.content && (
-        <div className="mt-6 whitespace-pre-wrap leading-relaxed text-black/85 dark:text-white/85">
+        <div className="mt-6 whitespace-pre-wrap leading-relaxed text-cream/90">
           {lesson.content}
         </div>
       )}
@@ -75,8 +75,8 @@ export default async function LessonPage({
             type="submit"
             className={`rounded-full px-6 py-2.5 text-sm font-medium transition ${
               done
-                ? "border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/10"
-                : "bg-foreground text-background hover:opacity-90"
+                ? "border border-border text-cream/75 hover:bg-bg-elevated"
+                : "bg-yolk text-yolk-ink hover:bg-yolk-bright"
             }`}
           >
             {done ? "Пройден ✓ — снять отметку" : "Отметить как пройденный"}
@@ -84,16 +84,16 @@ export default async function LessonPage({
         </form>
       </div>
 
-      <div className="mt-10 flex justify-between text-sm">
+      <div className="mt-10 flex justify-between text-sm text-cream/80">
         {prev ? (
-          <Link href={`/lessons/${prev.id}`} className="hover:underline">
+          <Link href={`/lessons/${prev.id}`} className="hover:text-yolk transition">
             ← {prev.title}
           </Link>
         ) : (
           <span />
         )}
         {next ? (
-          <Link href={`/lessons/${next.id}`} className="hover:underline">
+          <Link href={`/lessons/${next.id}`} className="hover:text-yolk transition">
             {next.title} →
           </Link>
         ) : (

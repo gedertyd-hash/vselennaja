@@ -3,8 +3,12 @@ import { decrypt } from "@/lib/session";
 
 function isProtectedRoute(path: string) {
   return (
-    path.startsWith("/courses") ||
+    path.startsWith("/home") ||
+    path.startsWith("/start") ||
+    path.startsWith("/materials") ||
     path.startsWith("/lessons") ||
+    path.startsWith("/favorites") ||
+    path.startsWith("/profile") ||
     path.startsWith("/admin")
   );
 }
@@ -25,7 +29,7 @@ export default async function proxy(req: NextRequest) {
     (path === "/login" || path === "/register") &&
     session?.userId
   ) {
-    return NextResponse.redirect(new URL("/courses", req.nextUrl));
+    return NextResponse.redirect(new URL("/home", req.nextUrl));
   }
 
   return NextResponse.next();

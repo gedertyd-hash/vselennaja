@@ -1,27 +1,27 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Unbounded, Manrope } from "next/font/google";
 import Script from "next/script";
 import { TelegramAuthBridge } from "@/components/TelegramAuthBridge";
-import { SiteHeader } from "@/components/SiteHeader";
+import { AppShell } from "@/components/AppShell";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
   subsets: ["latin", "cyrillic"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin", "cyrillic"],
 });
 
 export const metadata: Metadata = {
-  title: "Вселенная — обучающая платформа",
-  description: "Уроки, гайды и воркшопы закрытого клуба",
+  title: "ИИшница — закрытый клуб про ИИ",
+  description: "Гайды, курсы, юзкейсы и воркшопы по работе с ИИ",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#14120f",
 };
 
 export default function RootLayout({
@@ -32,16 +32,15 @@ export default function RootLayout({
   return (
     <html
       lang="ru"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${unbounded.variable} ${manrope.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-bg text-cream">
         <Script
           src="https://telegram.org/js/telegram-web-app.js"
           strategy="beforeInteractive"
         />
         <TelegramAuthBridge />
-        <SiteHeader />
-        {children}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
