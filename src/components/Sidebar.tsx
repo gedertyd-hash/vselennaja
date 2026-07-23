@@ -30,7 +30,7 @@ export function Sidebar({ user }: { user: SidebarUser }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 shrink-0 border-r border-border bg-bg-elevated/40 flex flex-col h-screen sticky top-0 overflow-y-auto">
+    <aside className="hidden md:flex w-64 shrink-0 border-r border-border bg-bg-elevated/40 flex-col h-screen sticky top-0 overflow-y-auto">
       <div className="px-6 py-6 flex items-center gap-2.5">
         <YolkMark className="w-6 h-6" />
         <span className="font-display font-semibold text-lg tracking-tight">

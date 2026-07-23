@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/dal";
 
@@ -52,6 +53,15 @@ export default async function ProfilePage() {
           <dd>{user.createdAt.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })}</dd>
         </div>
       </dl>
+
+      {user.role === "ADMIN" && (
+        <Link
+          href="/admin"
+          className="mt-6 inline-flex items-center gap-2 rounded-full bg-yolk text-yolk-ink px-5 py-2.5 text-sm font-semibold hover:bg-yolk-bright transition md:hidden"
+        >
+          Открыть админку
+        </Link>
+      )}
     </main>
   );
 }
