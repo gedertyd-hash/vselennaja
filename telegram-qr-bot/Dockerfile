@@ -12,5 +12,4 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json* ./
 RUN npm install --omit=dev
 COPY --from=build /app/dist ./dist
-VOLUME ["/app/data"]
 CMD ["node", "dist/index.js"]
