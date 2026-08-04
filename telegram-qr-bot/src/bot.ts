@@ -1,7 +1,8 @@
-import { Bot, InlineKeyboard } from "grammy";
+import { Bot, InlineKeyboard, InputFile } from "grammy";
 import { config } from "./config.js";
 import { saveLead } from "./db.js";
 import { pickPrize } from "./prizes.js";
+import { MARKETPLACES, marketplaceLabel } from "./marketplaces.js";
 
 export const bot = new Bot(config.botToken);
 
@@ -13,23 +14,47 @@ const CONSENT_NOTE =
   "Нажимая «Открыть капсулу», вы соглашаетесь на обработку данных вашего " +
   "Telegram-аккаунта (ID, юзернейм, имя) для рассылок и статистики бренда.";
 
+const MARKETPLACE_CODES = MARKETPLACES.map((m) => m.code).join("|");
+
 bot.command("start", async (ctx) => {
   const startParam = ctx.match?.toString().trim() || null;
   const user = ctx.from;
   if (!user) return;
 
-  const keyboard = new InlineKeyboard().text("🎁 Открыть капсулу", `open:${startParam ?? ""}`);
+  const keyboard = new InlineKeyboard();
+  for (const m of MARKETPLACES) {
+    keyboard.text(m.label, `mp:${m.code}:${startParam ?? ""}`).row();
+  }
 
   await ctx.reply(
     `Привет! Это бот ${config.brandName}.\n\n` +
-      `Вы отсканировали код с упаковки — внутри капсула с подарком.\n\n` +
+      `Подскажите, откуда вы к нам пришли?`,
+    { reply_markup: keyboard }
+  );
+});
+
+bot.callbackQuery(new RegExp(`^mp:(${MARKETPLACE_CODES}):(.*)$`), async (ctx) => {
+  const marketplace = ctx.match[1];
+  const startParam = ctx.match[2] || "";
+
+  await ctx.answerCallbackQuery();
+  await ctx.editMessageReplyMarkup(undefined).catch(() => undefined);
+
+  const keyboard = new InlineKeyboard().text(
+    "🎁 Открыть капсулу",
+    `open:${marketplace}:${startParam}`
+  );
+
+  await ctx.reply(
+    `Отлично! Вы отсканировали код с упаковки — внутри капсула с подарком.\n\n` +
       CONSENT_NOTE,
     { reply_markup: keyboard }
   );
 });
 
-bot.callbackQuery(/^open:(.*)$/, async (ctx) => {
-  const startParam = ctx.match[1] || null;
+bot.callbackQuery(new RegExp(`^open:(${MARKETPLACE_CODES}):(.*)$`), async (ctx) => {
+  const marketplace = ctx.match[1];
+  const startParam = ctx.match[2] || null;
   const user = ctx.from;
 
   await ctx.answerCallbackQuery();
@@ -47,6 +72,7 @@ bot.callbackQuery(/^open:(.*)$/, async (ctx) => {
     username: user.username ?? null,
     firstName: user.first_name ?? null,
     startParam,
+    marketplace,
     prize,
   });
 
@@ -65,12 +91,32 @@ bot.callbackQuery(/^open:(.*)$/, async (ctx) => {
 
 bot.command("stats", async (ctx) => {
   if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
-  const { countLeads, countByBatch } = await import("./db.js");
+  const { countLeads, countByMarketplace } = await import("./db.js");
   const total = countLeads();
-  const byBatch = countByBatch()
-    .map((row) => `  ${row.start_param ?? "(без метки)"}: ${row.n}`)
+  const byMarketplace = countByMarketplace()
+    .map((row) => `  ${marketplaceLabel(row.marketplace)}: ${row.n}`)
     .join("\n");
-  await ctx.reply(`Всего в базе: ${total}\n\nПо партиям/QR:\n${byBatch || "  пусто"}`);
+  await ctx.reply(
+    `Всего в базе: ${total}\n\nПо маркетплейсам:\n${byMarketplace || "  пусто"}`
+  );
+});
+
+bot.command("export", async (ctx) => {
+  if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
+  const { getAllLeads } = await import("./db.js");
+  const { leadsToCsv } = await import("./csv.js");
+
+  const rows = getAllLeads();
+  if (rows.length === 0) {
+    await ctx.reply("В базе пока никого нет.");
+    return;
+  }
+
+  const csv = leadsToCsv(rows);
+  const fileName = `leads-${new Date().toISOString().slice(0, 10)}.csv`;
+  await ctx.replyWithDocument(new InputFile(Buffer.from(csv, "utf-8"), fileName), {
+    caption: `Выгрузка базы: ${rows.length} чел. Открывается в Excel/Google Таблицах.`,
+  });
 });
 
 bot.catch((err) => {

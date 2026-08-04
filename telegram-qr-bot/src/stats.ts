@@ -1,8 +1,9 @@
 // Быстрый просмотр базы из терминала: npm run stats
-import { countByBatch, countLeads } from "./db.js";
+import { countByMarketplace, countLeads } from "./db.js";
+import { marketplaceLabel } from "./marketplaces.js";
 
 console.log(`Всего подписчиков в базе: ${countLeads()}`);
-console.log("По партиям/QR-кодам:");
-for (const row of countByBatch()) {
-  console.log(`  ${row.start_param ?? "(без метки)"}: ${row.n}`);
+console.log("По маркетплейсам:");
+for (const row of countByMarketplace()) {
+  console.log(`  ${marketplaceLabel(row.marketplace)}: ${row.n}`);
 }
