@@ -6,7 +6,7 @@ import { IconStar } from "@/components/icons";
 import { toggleFavoriteAction } from "@/app/actions/favorites";
 import { completeLessonAction, uncompleteLessonAction } from "@/app/actions/progress";
 import { MarkdownContent } from "@/components/MarkdownContent";
-import { MATERIAL_TYPE_META, LEVEL_LABEL, LEVEL_CLASSES } from "@/lib/materials";
+import { MATERIAL_TYPE_META, LEVEL_LABEL, LEVEL_CLASSES, LESSON_KIND_LABEL } from "@/lib/materials";
 
 export default async function MaterialDetailPage({
   params,
@@ -154,38 +154,57 @@ export default async function MaterialDetailPage({
       )}
 
       <div className="mt-8 space-y-8">
-        {material.modules.map((module) => (
-          <section key={module.id}>
-            <h2 className="font-medium mb-3">{module.title}</h2>
-            <ul className="space-y-2">
-              {module.lessons.map((lesson) => {
-                const lessonDone = lesson.progress.length > 0;
-                return (
-                  <li key={lesson.id}>
-                    <Link
-                      href={`/lessons/${lesson.id}`}
-                      className="flex items-center gap-3 rounded-lg border border-border bg-bg-elevated px-4 py-3 hover:border-yolk/40 transition"
-                    >
-                      <span
-                        className={`w-5 h-5 shrink-0 rounded-full border flex items-center justify-center text-xs ${
-                          lessonDone
-                            ? "bg-yolk text-yolk-ink border-yolk"
-                            : "border-border text-transparent"
-                        }`}
+        {material.modules.map((module) => {
+          const moduleCompleted = module.lessons.filter((l) => l.progress.length > 0).length;
+          const moduleMinutes = module.lessons.reduce((sum, l) => sum + (l.durationMinutes ?? 0), 0);
+
+          return (
+            <section key={module.id}>
+              <div className="flex items-baseline justify-between gap-3 mb-3">
+                <h2 className="font-medium">{module.title}</h2>
+                {module.lessons.length > 0 && moduleMinutes > 0 && (
+                  <span className="text-xs text-text-muted shrink-0">
+                    {moduleCompleted}/{module.lessons.length} · ~{moduleMinutes} мин
+                  </span>
+                )}
+              </div>
+              <ul className="space-y-2">
+                {module.lessons.map((lesson) => {
+                  const lessonDone = lesson.progress.length > 0;
+                  return (
+                    <li key={lesson.id}>
+                      <Link
+                        href={`/lessons/${lesson.id}`}
+                        className="flex items-center gap-3 rounded-lg border border-border bg-bg-elevated px-4 py-3 hover:border-yolk/40 transition"
                       >
-                        ✓
-                      </span>
-                      <span className="flex-1">{lesson.title}</span>
-                    </Link>
-                  </li>
-                );
-              })}
-              {module.lessons.length === 0 && (
-                <li className="text-sm text-text-faint">Уроки скоро появятся.</li>
-              )}
-            </ul>
-          </section>
-        ))}
+                        <span
+                          className={`w-5 h-5 shrink-0 rounded-full border flex items-center justify-center text-xs ${
+                            lessonDone
+                              ? "bg-yolk text-yolk-ink border-yolk"
+                              : "border-border text-transparent"
+                          }`}
+                        >
+                          ✓
+                        </span>
+                        <span className="flex-1">{lesson.title}</span>
+                        {(lesson.kind || lesson.durationMinutes) && (
+                          <span className="text-xs text-text-faint shrink-0 whitespace-nowrap">
+                            {lesson.kind ? LESSON_KIND_LABEL[lesson.kind] : null}
+                            {lesson.kind && lesson.durationMinutes ? " · " : null}
+                            {lesson.durationMinutes ? `${lesson.durationMinutes} мин` : null}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+                {module.lessons.length === 0 && (
+                  <li className="text-sm text-text-faint">Уроки скоро появятся.</li>
+                )}
+              </ul>
+            </section>
+          );
+        })}
       </div>
     </main>
   );

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/dal";
 import { completeLessonAction, uncompleteLessonAction } from "@/app/actions/progress";
 import { MarkdownContent } from "@/components/MarkdownContent";
+import { LESSON_KIND_LABEL } from "@/lib/materials";
 
 export default async function LessonPage({
   params,
@@ -55,6 +56,14 @@ export default async function LessonPage({
       </Link>
 
       <h1 className="font-display text-2xl font-semibold mt-2">{lesson.title}</h1>
+
+      {(lesson.kind || lesson.durationMinutes) && (
+        <p className="text-xs text-text-muted mt-1.5">
+          {lesson.kind ? LESSON_KIND_LABEL[lesson.kind] : null}
+          {lesson.kind && lesson.durationMinutes ? " · " : null}
+          {lesson.durationMinutes ? `${lesson.durationMinutes} мин` : null}
+        </p>
+      )}
 
       {siblings.length > 1 && (
         <div className="mt-4">

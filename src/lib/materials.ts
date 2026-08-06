@@ -21,6 +21,19 @@ export const LEVEL_CLASSES = {
   ADVANCED: "bg-paprika text-paprika-ink",
 } as const;
 
+export const LESSON_KIND_LABEL = {
+  THEORY: "Теория",
+  PRACTICE: "Практика",
+} as const;
+
+export function pluralizeMinutes(count: number) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return `${count} минута`;
+  if ([2, 3, 4].includes(mod10) && ![12, 13, 14].includes(mod100)) return `${count} минуты`;
+  return `${count} минут`;
+}
+
 export function pluralizeCount(count: number, singular: string) {
   if (count === 1) return `1 ${singular}`;
   if (singular === "гайд") return `${count} ${count % 10 === 1 && count % 100 !== 11 ? "гайд" : "гайдов"}`;

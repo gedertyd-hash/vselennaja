@@ -30,6 +30,11 @@ enum LessonType {
   TEXT
 }
 
+enum LessonKind {
+  THEORY
+  PRACTICE
+}
+
 model User {
   id               String   @id @default(cuid())
   email            String?  @unique
@@ -92,6 +97,8 @@ model Lesson {
   slug      String
   title     String
   type      LessonType @default(TEXT)
+  kind      LessonKind?
+  durationMinutes Int?
   content   String?
   videoUrl  String?
   published Boolean    @default(false)
