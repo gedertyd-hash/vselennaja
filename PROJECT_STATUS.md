@@ -21,7 +21,7 @@ Working notes for whichever Claude session picks up this repo next. Read this be
 ## Deployment / ops facts (don't rediscover these)
 
 - **Sandbox cannot reach**: the owner's live Neon DB, Prisma's hosted DB API, arbitrary external APIs. It CAN reach npm registry, Google Fonts (via `curl`, not via Chromium/Playwright directly — see above), and GitHub (read) via the git proxy.
-- **GitHub push**: the GitHub App integration lacks write access to `gedertyd-hash/vselennaja`. Standing workaround: ask the owner for a fresh classic PAT (`repo` scope) each time, push via `git push "https://gedertyd-hash:TOKEN@github.com/..."`, immediately remind her to revoke it at github.com/settings/tokens. This is not a one-off — expect to do it every session that needs a push.
+- **GitHub push**: the GitHub App integration lacks write access to `gedertyd-hash/vselennaja` in some session types. Standing workaround there: ask the owner for a fresh classic PAT (`repo` scope) each time, push via `git push "https://gedertyd-hash:TOKEN@github.com/..."`, immediately remind her to revoke it at github.com/settings/tokens. **Update 2026-08-10**: in a Claude Code on the web / remote-session context scoped to this repo, `git push -u origin <branch>` worked directly with no PAT needed — check this first before asking the owner for a token, it may no longer be necessary depending on how the session was started.
 - **Vercel build**: `package.json` `"build"` script is `prisma generate && prisma db push --accept-data-loss && next build`, plus `"postinstall": "prisma generate"` — this makes Vercel's zero-config `npm run build` fully self-sufficient (handles schema migration automatically on every deploy). Don't remove this.
 - **Before any destructive git operation**: check `git status` and `git log origin/<branch>..HEAD` / `git log HEAD..origin/<branch>` first. See "Known issues" — this branch has had unplanned parallel-session pushes before.
 
@@ -37,7 +37,7 @@ Working notes for whichever Claude session picks up this repo next. Read this be
 **Courses** (`type: COURSE`):
 - `pervaya-nedelya-s-ii` — "Первая неделя с ИИ", 3 modules / 6 lessons, fully written.
 - `claude-s-nulya-do-pro` — "Claude с нуля до PRO", 3 modules / 6 lessons, fully written.
-- `chatgpt-s-nulya-do-pro` — "ChatGPT с нуля до PRO", 9 modules / 45 lessons. **Module 1 only (7 lessons) has real content.** Modules 2–9 (38 lessons) are scaffolded with correct titles, `kind`, `durationMinutes: 10` but `content: COMING_SOON` (a shared placeholder string — see top of `demo-content.ts`). This is the main open content task — see "Next steps".
+- `chatgpt-s-nulya-do-pro` — "ChatGPT с нуля до PRO", 9 modules / 45 lessons. **Modules 1–2 (14 lessons) have real content.** Module 1 lesson 3 ("Аккаунт, тарифы, интерфейс и приложения") was rewritten on 2026-08-10 with concrete tariff names/prices (Free/Plus ~20$/Pro) and an RF-payment note per owner request — no separate "оплата из РФ" guide exists yet, owner explicitly said not needed for now. Modules 3–9 (31 lessons) are scaffolded with correct titles, `kind`, `durationMinutes: 10` but `content: COMING_SOON` (a shared placeholder string — see top of `demo-content.ts`). This is the main open content task — see "Next steps".
 
 **Cases** (`type: CASE`): `kak-agentstvo-uskorilo-otchety`, `salon-krasoty-otvety-klientam`, `yurfirma-proverka-dogovorov`.
 
@@ -45,7 +45,7 @@ Working notes for whichever Claude session picks up this repo next. Read this be
 
 ## Next steps (in likely order)
 
-1. Write real content for `chatgpt-s-nulya-do-pro` modules 2–9, one module at a time, matching the voice/structure of module 1 (see `demo-content.ts` lines ~904–1163 for the pattern: `## ` headers, `ты`-address, concrete examples, no fluff, ~10 min per lesson). Module 2 ("Промты и проверка") is next up per the owner's last message.
+1. Write real content for `chatgpt-s-nulya-do-pro` modules 3–9, one module at a time, matching the voice/structure of modules 1–2 (see `demo-content.ts` for the pattern: `## ` headers, `ты`-address, concrete examples, no fluff, ~10 min per lesson). Module 3 ("Память, инструкции и Projects") is next up.
 2. Each new module: write content → `npx tsc --noEmit` → `npm run lint` → `npx next build` → visual QA via the static-render + Playwright screenshot technique (see recent commits for the script pattern — render `MarkdownContent`'s output through `react-dom/server` with the compiled Tailwind CSS from `.next/static/chunks/*.css`, screenshot with Chromium) → commit → ask owner for a fresh PAT → push → remind her to revoke the token → tell her to hit "Заполнить демо-материалами" in `/admin`.
 3. Not yet started, explicitly deferred by the owner: Telegram bot integration (token/username), payment gateway, channel invite/kick automation.
 
