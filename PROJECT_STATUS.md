@@ -26,9 +26,10 @@ The owner runs this course off a **competitor's course as raw material**: she pa
 
 **Rule 2 — running personas for continuity.** Once module 4 started, lessons began threading the same fictional persona through several lessons in a row so the course reads as one continuous story rather than disconnected examples. Established so far (reuse or extend, don't reset arbitrarily):
 - **Настя** — coach running stress-management support groups. Main persona for module 4's "трек эксперта" and *all* of module 5 (GPT module) — she builds "Ассистент Насти" (content GPT), then a "Продажник" and "Ассистент участницам" GPT in module 5's later lessons, and is referenced again in module 6.
-- **Игорь** — markets a barbershop chain. Module 4's "трек маркетолога".
+- **Игорь** — markets a barbershop chain. Module 4's "трек маркетолога"; also sources chairs/equipment in module 7's `rezhim-agenta`.
 - **Дима** — freelance web/landing-page developer. Module 4's "трек предпринимателя".
 - **Ира** — runs a small design studio with 2 freelance copywriters. Module 4's "работа с командой" lesson.
+- **Артём** — freelance context/target ads specialist for small businesses. Module 8's `skvoznoy-primer` (the full 5-layer system walkthrough). **Deliberately not Игорь**, even though the owner's source text used that name for this character — Игорь already has an established identity (barbershop-chain marketer) elsewhere in the course, and this character has a different profession, so reusing the name would have confused readers tracking personas across modules. When the owner's draft names a character that collides with an existing persona's established identity, introduce a new name rather than overloading the old one — don't ask her about it first, just note the substitution like this entry does.
 - (Earlier, module 3's memory/instructions lessons used **Аня**, a ceramics-studio owner, before Настя became the primary GPT-module persona — that's fine, not every module needs the same person.)
 
 **Rule 3 — image on every lesson, always rebuilt, never the owner's original file.** The owner regularly pastes real ChatGPT screenshots or illustrations inline in chat. **There is no tool in this environment that can save an image pasted inline in the conversation to disk** — it can only be viewed, not extracted. So every single time, the response is to rebuild a mockup from scratch via HTML/CSS/SVG + Playwright, never to reference the original file (it doesn't exist on disk). Two sub-cases:
@@ -61,14 +62,14 @@ The owner runs this course off a **competitor's course as raw material**: she pa
 - Google Fonts `@import`/CDN fails inside Playwright/Chromium in this sandbox even though `curl` reaches it. Always inline woff2 as base64 (see "Image production recipe").
 - `npm install` locally (needed once per fresh sandbox to get `node_modules` for `tsc`/`lint`/build) touches `package-lock.json` cosmetically (adds `"hasInstallScript": true"` or similar) even with no real dependency change — `git checkout -- package-lock.json` before every commit to avoid committing that noise.
 
-## Content inventory (as of PR #52)
+## Content inventory (as of PR #54)
 
 **Guides** (`type: GUIDE`): `dobro-pozhalovat-v-club`, `nastroit-claude-za-10-minut`, `5-promptov-chas-v-den`, `chto-nelzya-zagruzhat-v-ii`, `chatgpt-vs-claude-chto-vybrat`, `kommercheskoe-predlozhenie-s-ii`, `kak-ponyat-chto-tekst-pisala-neyroset`, `luchshie-skilly-dlya-claude`, `kak-ne-szhech-tokeny-v-claude-code`.
 
 **Courses** (`type: COURSE`):
 - `pervaya-nedelya-s-ii` — "Первая неделя с ИИ", 3 modules / 6 lessons, fully written.
 - `claude-s-nulya-do-pro` — "Claude с нуля до PRO", 3 modules / 6 lessons, fully written.
-- `chatgpt-s-nulya-do-pro` — "ChatGPT с нуля до PRO", 9 modules / 45 lessons. **39 of 45 lessons have real content, 6 remain `COMING_SOON`.**
+- `chatgpt-s-nulya-do-pro` — "ChatGPT с нуля до PRO", 9 modules / 45 lessons. **40 of 45 lessons have real content, 5 remain `COMING_SOON`.**
   - ✅ Module 1 "Старт с ChatGPT" — 7/7 lessons.
   - ✅ Module 2 "Промты и проверка" — 7/7 lessons.
   - ✅ Module 3 "Память, инструкции и Projects" — 5/5 lessons.
@@ -76,7 +77,7 @@ The owner runs this course off a **competitor's course as raw material**: she pa
   - ✅ Module 5 "Собственные GPT" — 7/7 lessons (the course's "sердце" — Настя's GPT-building arc, fully illustrated).
   - ✅ Module 6 "Приложения (Apps)" — 4/4 lessons (`chto-takoe-apps`, `prava-i-deystviya`, `nastroyka-klyuchevykh-apps`, `svyazka-apps-v-protsess`). Настя's Apps arc: connects Gmail, then chains mail+calendar into one morning-triage request.
   - ✅ Module 7 "Автопилот: задачи по расписанию и режим агента" — 4/4 lessons (`zadachi-po-raspisaniyu`, `rezhim-agenta`, `praktika-avtopilot`, `granitsy-kontrol-rubilnik`). Настя + Игорь examples throughout; closes on the "red line" (money/sending/publishing need confirmation) and the lockdown-mode setting.
-  - 🟡 Module 8 "Финальный проект: твоя GPT-система целиком" — **1/3 lessons done** (`plan-sborki-sistemy` — 5-layer blueprint, references Настя's GPT lineup). Remaining: `skvoznoy-primer`, `tvoya-ochered-sobrat`.
+  - 🟡 Module 8 "Финальный проект: твоя GPT-система целиком" — **2/3 lessons done** (`plan-sborki-sistemy` — 5-layer blueprint; `skvoznoy-primer` — full walkthrough with new persona Артём, see Rule 2). Remaining: `tvoya-ochered-sobrat`.
   - ⬜ Module 9 "Бонус: Codex — мини-инструменты и страницы" — 0/3: `chto-takoe-codex`, `pervyy-mini-proekt`, `kak-ne-slomat-proekt`.
 
 **Cases** (`type: CASE`): `kak-agentstvo-uskorilo-otchety`, `salon-krasoty-otvety-klientam`, `yurfirma-proverka-dogovorov`.
@@ -85,7 +86,7 @@ The owner runs this course off a **competitor's course as raw material**: she pa
 
 ## Next steps (in likely order)
 
-1. Wait for the owner to paste the next lesson (she sends one at a time, usually with source text + 1-3 screenshots/illustrations). Continue module 8 (`skvoznoy-primer` next), then module 9 — see "Content inventory" above for exact remaining slugs.
+1. Wait for the owner to paste the next lesson (she sends one at a time, usually with source text + 1-3 screenshots/illustrations). Finish module 8 (`tvoya-ochered-sobrat` — last lesson), then module 9 — see "Content inventory" above for exact remaining slugs.
 2. Follow "Content workflow" rules above without exception: substantially adapt (not reword) the text, keep or introduce a running persona, rebuild every image from scratch in the correct style, run the full check → QA → push → PR → merge loop, tell the owner when it's live.
 3. Once all 45 lessons are done, `chatgpt-s-nulya-do-pro` is complete — no further next-course task has been assigned yet, ask the owner what's next (a new course, more guides, the deferred Telegram bot integration, etc.).
 4. Not yet started, explicitly deferred by the owner: Telegram bot integration (token/username), payment gateway, channel invite/kick automation.
