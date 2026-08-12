@@ -131,6 +131,9 @@ def print_summary(traffic: list[dict], realization: dict) -> None:
     if realization:
         rows = realization.get("result", {}).get("rows", [])
         print(f"Отчёт о реализации: строк — {len(rows)}", file=sys.stderr)
+        if rows:
+            print("Пример строки отчёта (структура полей):", file=sys.stderr)
+            print(json.dumps(rows[0], ensure_ascii=False, indent=2), file=sys.stderr)
     else:
         print("Отчёт о реализации: пусто (см. ошибку выше)", file=sys.stderr)
 
