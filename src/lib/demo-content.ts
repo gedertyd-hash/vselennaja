@@ -33,6 +33,14 @@ const singleLesson = (title: string, content: string): ModuleDraft[] => [
   { title: "Материал", lessons: [{ slug: "content", title, content }] },
 ];
 
+const stubLesson = (slug: string, title: string, durationMinutes = 10): LessonDraft => ({
+  slug,
+  title,
+  kind: "THEORY",
+  durationMinutes,
+  content: `Этот урок готовится и появится здесь в одном из ближайших обновлений курса.`,
+});
+
 export const DEMO_MATERIALS: MaterialDraft[] = [
   {
     slug: "dobro-pozhalovat-v-club",
@@ -4269,6 +4277,71 @@ Claude выдаст гладкий, но безликий текст с фраз
 
 Контекст разобрали. Дальше соберём его в чёткую структуру, которую можно применять каждый раз не задумываясь, — формула рабочего запроса: пять элементов, универсальный шаблон и то, как дробить сложные задачи на понятные шаги.`,
           },
+          stubLesson("formula-rabochego-zaprosa", "Формула рабочего запроса"),
+          stubLesson("rabota-s-faylami-i-dokumentami", "Работа с файлами и документами"),
+          stubLesson("veb-poisk-i-aktualnaya-informatsiya", "Веб-поиск и работа с актуальной информацией"),
+          stubLesson("artefakty-kogda-nuzhen-otdelnyy-rezultat", "Артефакты: когда нужен отдельный результат"),
+          stubLesson("chto-delat-esli-claude-oshibaetsya", "Что делать, если Claude ошибается или застрял"),
+        ],
+      },
+      {
+        title: "Projects и стиль: рабочее пространство под твои задачи",
+        lessons: [
+          stubLesson("projects-glavnyy-instrument", "Projects: главный инструмент для повторяющейся работы"),
+          stubLesson("instruktsii-proekta", "Инструкции проекта"),
+          stubLesson("stil-golos-claude", "Стиль: как научить Claude говорить твоим голосом"),
+          stubLesson("praktika-pervyy-project", "Практика: собираем первый рабочий Project"),
+          stubLesson("chego-ne-delaem-v-project", "Что мы НЕ делаем в Project и куда идём дальше"),
+        ],
+      },
+      {
+        title: "Рабочие сценарии под твою нишу",
+        lessons: [
+          stubLesson("stsenarii-dlya-ekspertov-i-kouchey", "Сценарии для экспертов и коучей"),
+          stubLesson("stsenarii-dlya-marketologov", "Сценарии для маркетологов и контент-мейкеров"),
+          stubLesson("stsenarii-dlya-predprinimateley", "Сценарии для предпринимателей и фрилансеров"),
+          stubLesson("sovmestnaya-rabota-s-komandoy", "Совместная работа с командой и клиентами"),
+        ],
+      },
+      {
+        title: "Skills: готовые помощники под повторяющиеся задачи",
+        lessons: [
+          stubLesson("chto-takoe-skills", "Что такое Skills и когда они нужны"),
+          stubLesson("nabor-skills-dlya-raboty", "Набор Skills для ежедневной работы"),
+          stubLesson("sozdaem-svoy-skill", "Создаём свой Skill под нишу"),
+        ],
+      },
+      {
+        title: "Connectors: подключаем Claude к рабочим сервисам",
+        lessons: [
+          stubLesson("chto-takoe-connectors", "Что такое Connectors и зачем они нужны"),
+          stubLesson("nastroyka-klyuchevykh-connectorov", "Настройка ключевых коннекторов"),
+          stubLesson("svyazka-connectorov-v-protsess", "Связка коннекторов в рабочий процесс"),
+        ],
+      },
+      {
+        title: "Cowork: как делегировать Claude рутинные действия",
+        lessons: [
+          stubLesson("chto-takoe-cowork", "Что такое Cowork и когда он нужен"),
+          stubLesson("rabota-s-brauzerom-i-faylami", "Работа с браузером и локальными файлами"),
+          stubLesson("stsenarii-ispolzovaniya-cowork", "Сценарии использования Cowork"),
+        ],
+      },
+      {
+        title: "Claude Code: собираем простые сайты, приложения и инструменты",
+        lessons: [
+          stubLesson("chto-takoe-claude-code", "Что такое Claude Code и зачем он не-разработчику"),
+          stubLesson("ustanovka-i-pervyy-zapusk", "Установка и первый запуск"),
+          stubLesson("sobiraem-pervyy-produkt", "Собираем первый продукт: от идеи до рабочей версии"),
+          stubLesson("kak-ne-slomat-proekt-claude-code", "Как не сломать проект"),
+        ],
+      },
+      {
+        title: "Финальный проект: собираем твою AI-систему целиком",
+        lessons: [
+          stubLesson("plan-sborki-ai-sistemy", "Финальный проект: план сборки твоей AI-системы", 15),
+          stubLesson("odin-zapusk-cherez-vsyu-sistemu", "Один запуск через всю систему", 10),
+          stubLesson("tvoya-ochered-sobrat-sistemu", "Твоя очередь: собери свою систему за вечер", 5),
         ],
       },
     ],
