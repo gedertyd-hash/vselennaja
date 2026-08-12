@@ -40,6 +40,8 @@ The owner runs this course off a **competitor's course as raw material**: she pa
 
 **Rule 4 — pipeline is fully owner-hands-off.** She explicitly said she has no prior git workflow ("я только заходила в админку и жала опубликовать") and wants everything else done for her. Current loop per lesson: write content + image(s) → `npx tsc --noEmit` → `npm run lint` → `SESSION_SECRET=x DATABASE_URL=postgres://x npx next build` → visual QA (see recipe below) → commit on `claude/aishnica-chatgpt-course-dmjuyl` → push → open a PR via `mcp__github__create_pull_request` (base branch `claude/telegram-learning-platform-7vet0n`) → merge it immediately via `mcp__github__merge_pull_request`. **No PAT needed in this remote-session context** — the GitHub MCP tools and plain `git push` both work directly; the old PAT-workaround note is obsolete for this session type (may still apply to a different, interactive sandbox — check first, don't assume). Tell the owner a deploy is on its way and to hit "Заполнить демо-материалами" once Vercel finishes — that's her only remaining click.
 
+**Rule 5 — never link to a guide/page that doesn't exist on the platform yet.** The owner's source text for `pervyy-mini-proekt` (module 9) included a cross-sell link to a "Codex для новичков" guide at `airoomclub.ru/guides/codex-s-nulya` — she explicitly said to leave it out for now ("ссылку на гайд вставлять не нужно пока никакую"), since that guide isn't part of this platform's content. Default going forward: if source text references a guide/course/page you haven't seen in `DEMO_MATERIALS`, omit the link (or ask) rather than publish a link to something that may not exist or may point off-platform.
+
 ## Image production recipe (tested working, follow exactly)
 
 1. **Fonts**: don't refetch from Google Fonts. Reuse the already-resolved woff2 files Next's `next/font` cached under `.next/static/media/` — specifically the Cyrillic-range (`U+400-45F`) variable-weight files for Unbounded and Manrope (grep `.next/static/chunks/*.css` for `@font-face{font-family:Unbounded...unicode-range:...U+400-45F` to find the current filenames, they can change between builds). Base64-inline them into a `<style>` `@font-face` block. Google Fonts `@import`/CDN fails inside Playwright/Chromium in this sandbox (`net::ERR_CONNECTION_RESET`) even though `curl` reaches it fine — never rely on it.
@@ -63,14 +65,14 @@ The owner runs this course off a **competitor's course as raw material**: she pa
 - Google Fonts `@import`/CDN fails inside Playwright/Chromium in this sandbox even though `curl` reaches it. Always inline woff2 as base64 (see "Image production recipe").
 - `npm install` locally (needed once per fresh sandbox to get `node_modules` for `tsc`/`lint`/build) touches `package-lock.json` cosmetically (adds `"hasInstallScript": true"` or similar) even with no real dependency change — `git checkout -- package-lock.json` before every commit to avoid committing that noise.
 
-## Content inventory (as of PR #58)
+## Content inventory (as of PR #60)
 
 **Guides** (`type: GUIDE`): `dobro-pozhalovat-v-club`, `nastroit-claude-za-10-minut`, `5-promptov-chas-v-den`, `chto-nelzya-zagruzhat-v-ii`, `chatgpt-vs-claude-chto-vybrat`, `kommercheskoe-predlozhenie-s-ii`, `kak-ponyat-chto-tekst-pisala-neyroset`, `luchshie-skilly-dlya-claude`, `kak-ne-szhech-tokeny-v-claude-code`.
 
 **Courses** (`type: COURSE`):
 - `pervaya-nedelya-s-ii` — "Первая неделя с ИИ", 3 modules / 6 lessons, fully written.
 - `claude-s-nulya-do-pro` — "Claude с нуля до PRO", 3 modules / 6 lessons, fully written.
-- `chatgpt-s-nulya-do-pro` — "ChatGPT с нуля до PRO", 9 modules / 45 lessons. **42 of 45 lessons have real content, 3 remain `COMING_SOON` — all in module 9.**
+- `chatgpt-s-nulya-do-pro` — "ChatGPT с нуля до PRO", 9 modules / 45 lessons. **43 of 45 lessons have real content, 2 remain `COMING_SOON` — both in module 9.**
   - ✅ Module 1 "Старт с ChatGPT" — 7/7 lessons.
   - ✅ Module 2 "Промты и проверка" — 7/7 lessons.
   - ✅ Module 3 "Память, инструкции и Projects" — 5/5 lessons.
@@ -79,7 +81,7 @@ The owner runs this course off a **competitor's course as raw material**: she pa
   - ✅ Module 6 "Приложения (Apps)" — 4/4 lessons (`chto-takoe-apps`, `prava-i-deystviya`, `nastroyka-klyuchevykh-apps`, `svyazka-apps-v-protsess`). Настя's Apps arc: connects Gmail, then chains mail+calendar into one morning-triage request.
   - ✅ Module 7 "Автопилот: задачи по расписанию и режим агента" — 4/4 lessons (`zadachi-po-raspisaniyu`, `rezhim-agenta`, `praktika-avtopilot`, `granitsy-kontrol-rubilnik`). Настя + Игорь examples throughout; closes on the "red line" (money/sending/publishing need confirmation) and the lockdown-mode setting.
   - ✅ Module 8 "Финальный проект: твоя GPT-система целиком" — 3/3 lessons (`plan-sborki-sistemy`, `skvoznoy-primer` — persona Артём, see Rule 2, `tvoya-ochered-sobrat`). Closing lesson corrects two factual mismatches in the owner's source text: referenced course is `claude-s-nulya-do-pro` (not "Claude под ключ"), and Codex is framed as this course's own module 9, not a separate track.
-  - 🟡 Module 9 "Бонус: Codex — мини-инструменты и страницы" — **1/3 lessons done** (`chto-takoe-codex`). **Last module of the course** — once `pervyy-mini-proekt` and `kak-ne-slomat-proekt` are done, `chatgpt-s-nulya-do-pro` is fully written (45/45).
+  - 🟡 Module 9 "Бонус: Codex — мини-инструменты и страницы" — **2/3 lessons done** (`chto-takoe-codex`, `pervyy-mini-proekt`). **Last module of the course** — once `kak-ne-slomat-proekt` is done, `chatgpt-s-nulya-do-pro` is fully written (45/45, the final lesson of the whole course).
 
 **Cases** (`type: CASE`): `kak-agentstvo-uskorilo-otchety`, `salon-krasoty-otvety-klientam`, `yurfirma-proverka-dogovorov`.
 
@@ -87,7 +89,7 @@ The owner runs this course off a **competitor's course as raw material**: she pa
 
 ## Next steps (in likely order)
 
-1. Wait for the owner to paste the next lesson (she sends one at a time, usually with source text + 1-3 screenshots/illustrations). Continue module 9 (`pervyy-mini-proekt` next, then `kak-ne-slomat-proekt`) — the last module of the whole course. Once both are done, `chatgpt-s-nulya-do-pro` is fully written (45/45).
+1. Wait for the owner to paste the next lesson. Only one lesson left in the entire course: `kak-ne-slomat-proekt` (module 9's closer). Once it's done, `chatgpt-s-nulya-do-pro` is fully written (45/45) — ask her what's next (see item 3 below).
 2. Follow "Content workflow" rules above without exception: substantially adapt (not reword) the text, keep or introduce a running persona, rebuild every image from scratch in the correct style, run the full check → QA → push → PR → merge loop, tell the owner when it's live.
 3. Once all 45 lessons are done, `chatgpt-s-nulya-do-pro` is complete — no further next-course task has been assigned yet, ask the owner what's next (a new course, more guides, the deferred Telegram bot integration, etc.).
 4. Not yet started, explicitly deferred by the owner: Telegram bot integration (token/username), payment gateway, channel invite/kick automation.
