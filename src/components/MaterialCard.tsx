@@ -20,6 +20,7 @@ export type MaterialCardData = {
   createdAt: Date;
   isNew: boolean;
   isFavorited: boolean;
+  coverImage?: string | null;
 };
 
 export function MaterialCard({ material }: { material: MaterialCardData }) {
@@ -30,9 +31,17 @@ export function MaterialCard({ material }: { material: MaterialCardData }) {
       <Link href={`/materials/${material.slug}`} className="block">
         <div
           className="relative min-h-[148px] flex items-center p-4 pt-11 overflow-hidden"
-          style={{
-            background: `radial-gradient(120% 120% at 15% 0%, ${glow}33 0%, transparent 60%), var(--bg-elevated-2)`,
-          }}
+          style={
+            material.coverImage
+              ? {
+                  backgroundImage: `linear-gradient(180deg, rgba(10,8,4,0.1) 0%, rgba(10,8,4,0.35) 55%, rgba(10,8,4,0.8) 100%), url(${material.coverImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }
+              : {
+                  background: `radial-gradient(120% 120% at 15% 0%, ${glow}33 0%, transparent 60%), var(--bg-elevated-2)`,
+                }
+          }
         >
           {material.isNew && (
             <span className="absolute top-3 left-3 rounded-full bg-yolk text-yolk-ink text-[11px] font-semibold px-2.5 py-1 tracking-wide">

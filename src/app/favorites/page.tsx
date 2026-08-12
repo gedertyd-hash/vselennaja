@@ -41,6 +41,7 @@ export default async function FavoritesPage() {
                 createdAt: course.createdAt,
                 isNew: isNewMaterial(course.createdAt),
                 isFavorited: true,
+                coverImage: course.coverImage,
               }}
             />
           ))}

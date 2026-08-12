@@ -25,6 +25,7 @@ type MaterialDraft = {
   type: MaterialType;
   level: Level;
   tag: string;
+  coverImage?: string;
   modules: ModuleDraft[];
 };
 
@@ -894,8 +895,9 @@ Workflow: Explore → Plan → Implement → Commit. Сначала Claude из�
   },
   {
     slug: "chatgpt-s-nulya-do-pro",
-    title: "ChatGPT с нуля до PRO",
+    title: "GPT под ключ",
     description: "Системный курс: от первого запроса до личной системы GPT-ассистентов под трафик, продажи и клиентов.",
+    coverImage: "/covers/course-gpt-pod-klyuch.png",
     type: "COURSE",
     level: "BEGINNER",
     tag: "ChatGPT",
@@ -3732,6 +3734,7 @@ export async function seedDemoContent(prisma: PrismaClient) {
         type: material.type,
         level: material.level,
         tag: material.tag,
+        coverImage: material.coverImage,
         published: true,
       },
       create: {
@@ -3741,6 +3744,7 @@ export async function seedDemoContent(prisma: PrismaClient) {
         type: material.type,
         level: material.level,
         tag: material.tag,
+        coverImage: material.coverImage,
         published: true,
       },
     });
