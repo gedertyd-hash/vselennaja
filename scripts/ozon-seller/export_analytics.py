@@ -132,8 +132,13 @@ def print_summary(traffic: list[dict], realization: dict) -> None:
         rows = realization.get("result", {}).get("rows", [])
         print(f"Отчёт о реализации: строк — {len(rows)}", file=sys.stderr)
         if rows:
-            print("Пример строки отчёта (структура полей):", file=sys.stderr)
-            print(json.dumps(rows[0], ensure_ascii=False, indent=2), file=sys.stderr)
+            gross = sum(r.get("seller_price_per_instance", 0) * r.get("delivery_commission", {}).get("quantity", 0) for r in rows)
+            deducted = sum(r.get("delivery_commission", {}).get("total", 0) for r in rows)
+            returns = sum(1 for r in rows if r.get("return_commission") is not None)
+            print(f"Валовая сумма продаж (цена × кол-во по строкам): {gross:.2f}", file=sys.stderr)
+            print(f"Суммарные удержания (delivery_commission.total, включает комиссию+логистику+допуслуги): {deducted:.2f}", file=sys.stderr)
+            print(f"Оценка чистой выплаты: {gross - deducted:.2f}", file=sys.stderr)
+            print(f"Строк с возвратом (return_commission заполнен): {returns}", file=sys.stderr)
     else:
         print("Отчёт о реализации: пусто (см. ошибку выше)", file=sys.stderr)
 
