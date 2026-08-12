@@ -1,0 +1,45 @@
+name: Ozon — рекламные кампании
+
+on:
+  workflow_dispatch:
+    inputs:
+      year:
+        description: "Год для статистики (например 2026)"
+        required: true
+        default: "2026"
+      month:
+        description: "Месяц числом (например 7 для июля)"
+        required: true
+        default: "7"
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установить зависимости
+        run: pip install -r scripts/ozon-ads/requirements.txt
+
+      - name: Выгрузить кампании и статистику
+        env:
+          OZON_PERF_CLIENT_ID: ${{ secrets.OZON_PERF_CLIENT_ID }}
+          OZON_PERF_CLIENT_SECRET: ${{ secrets.OZON_PERF_CLIENT_SECRET }}
+          STATS_YEAR: ${{ inputs.year }}
+          STATS_MONTH: ${{ inputs.month }}
+        run: python scripts/ozon-ads/export_campaigns.py
+
+      - name: Загрузить результат
+        uses: actions/upload-artifact@v4
+        with:
+          name: ozon-ads
+          path: |
+            scripts/ozon-ads/campaigns.csv
+            scripts/ozon-ads/campaign_stats.csv
+            scripts/ozon-ads/campaign_stats.raw
+          if-no-files-found: ignore
+          retention-days: 7
