@@ -35,7 +35,7 @@ from _common import call, chunks, require_credentials
 
 LIST_PAGE_SIZE = 1000
 INFO_BATCH = 100
-RATING_BATCH = 200
+RATING_BATCH = 100
 REQUEST_PAUSE = 0.3
 
 
