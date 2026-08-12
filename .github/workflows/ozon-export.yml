@@ -1,0 +1,30 @@
+name: Ozon — экспорт товаров
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установить зависимости
+        run: pip install -r scripts/ozon-seller/requirements.txt
+
+      - name: Выгрузить товары
+        env:
+          OZON_CLIENT_ID: ${{ secrets.OZON_CLIENT_ID }}
+          OZON_API_KEY: ${{ secrets.OZON_API_KEY }}
+        run: python scripts/ozon-seller/export_products.py
+
+      - name: Загрузить результат
+        uses: actions/upload-artifact@v4
+        with:
+          name: ozon-products
+          path: scripts/ozon-seller/products.csv
+          retention-days: 7
