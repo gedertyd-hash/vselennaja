@@ -79,7 +79,7 @@ def get_traffic(date_from: str, date_to: str) -> list[dict]:
 
 
 def get_realization(year: int, month: int) -> dict:
-    return call("/v1/finance/realization", {"year": year, "month": month})
+    return call("/v2/finance/realization", {"year": year, "month": month})
 
 
 def main() -> None:
@@ -112,6 +112,27 @@ def main() -> None:
     realization_path = Path(__file__).parent / "analytics_realization.json"
     realization_path.write_text(json.dumps(realization, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Готово: {realization_path}", file=sys.stderr)
+
+    print_summary(traffic, realization)
+
+
+def print_summary(traffic: list[dict], realization: dict) -> None:
+    """Короткая сводка в лог запуска — чтобы результат было видно в GitHub Actions
+    без скачивания артефакта (полезно, если у смотрящего лог нет доступа к самому файлу)."""
+    print("\n=== Сводка ===", file=sys.stderr)
+    print(f"SKU в выборке: {len(traffic)}", file=sys.stderr)
+    revenue_total = sum((r.get("metrics") or [0])[0] for r in traffic)
+    units_total = sum((r.get("metrics") or [0, 0])[1] if len(r.get("metrics") or []) > 1 else 0 for r in traffic)
+    zero_sales = sum(1 for r in traffic if not any(r.get("metrics") or []))
+    print(f"Суммарная выручка (метрика revenue): {revenue_total}", file=sys.stderr)
+    print(f"Суммарно единиц (ordered_units): {units_total}", file=sys.stderr)
+    print(f"SKU без продаж за период: {zero_sales}", file=sys.stderr)
+
+    if realization:
+        rows = realization.get("result", {}).get("rows", [])
+        print(f"Отчёт о реализации: строк — {len(rows)}", file=sys.stderr)
+    else:
+        print("Отчёт о реализации: пусто (см. ошибку выше)", file=sys.stderr)
 
 
 if __name__ == "__main__":
