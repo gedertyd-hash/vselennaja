@@ -3,6 +3,10 @@ name: Ozon — аналитика за месяц
 on:
   workflow_dispatch:
     inputs:
+      store:
+        description: "Код магазина (пусто = основной; KOCHOI = Кочои)"
+        required: false
+        default: ""
       year:
         description: "Год (например 2026)"
         required: true
@@ -27,8 +31,8 @@ jobs:
 
       - name: Выгрузить аналитику
         env:
-          OZON_CLIENT_ID: ${{ secrets.OZON_CLIENT_ID }}
-          OZON_API_KEY: ${{ secrets.OZON_API_KEY }}
+          OZON_CLIENT_ID: ${{ inputs.store != '' && secrets[format('OZON_CLIENT_ID_{0}', inputs.store)] || secrets.OZON_CLIENT_ID }}
+          OZON_API_KEY: ${{ inputs.store != '' && secrets[format('OZON_API_KEY_{0}', inputs.store)] || secrets.OZON_API_KEY }}
           ANALYTICS_YEAR: ${{ inputs.year }}
           ANALYTICS_MONTH: ${{ inputs.month }}
         run: python scripts/ozon-seller/export_analytics.py
@@ -36,7 +40,7 @@ jobs:
       - name: Загрузить результат
         uses: actions/upload-artifact@v4
         with:
-          name: ozon-analytics
+          name: ozon-analytics${{ inputs.store != '' && format('-{0}', inputs.store) || '' }}
           path: |
             scripts/ozon-seller/analytics_traffic.csv
             scripts/ozon-seller/analytics_realization.json
