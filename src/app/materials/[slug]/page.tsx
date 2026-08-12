@@ -154,9 +154,12 @@ export default async function MaterialDetailPage({
       )}
 
       <div className="mt-8 space-y-8">
-        {material.modules.map((module) => {
+        {material.modules.map((module, moduleIndex) => {
           const moduleCompleted = module.lessons.filter((l) => l.progress.length > 0).length;
           const moduleMinutes = module.lessons.reduce((sum, l) => sum + (l.durationMinutes ?? 0), 0);
+          const lessonOffset = material.modules
+            .slice(0, moduleIndex)
+            .reduce((sum, m) => sum + m.lessons.length, 0);
 
           return (
             <section key={module.id}>
@@ -169,8 +172,9 @@ export default async function MaterialDetailPage({
                 )}
               </div>
               <ul className="space-y-2">
-                {module.lessons.map((lesson) => {
+                {module.lessons.map((lesson, lessonIndex) => {
                   const lessonDone = lesson.progress.length > 0;
+                  const currentNumber = lessonOffset + lessonIndex + 1;
                   return (
                     <li key={lesson.id}>
                       <Link
@@ -178,18 +182,26 @@ export default async function MaterialDetailPage({
                         className="flex items-center gap-3 rounded-lg border border-border bg-bg-elevated px-4 py-3 hover:border-yolk/40 transition"
                       >
                         <span
-                          className={`w-5 h-5 shrink-0 rounded-full border flex items-center justify-center text-xs ${
+                          className={`w-5 h-5 shrink-0 rounded-full border flex items-center justify-center text-[11px] font-semibold ${
                             lessonDone
                               ? "bg-yolk text-yolk-ink border-yolk"
-                              : "border-border text-transparent"
+                              : "border-border text-text-muted"
                           }`}
                         >
-                          ✓
+                          {lessonDone ? "✓" : currentNumber}
                         </span>
                         <span className="flex-1">{lesson.title}</span>
                         {(lesson.kind || lesson.durationMinutes) && (
                           <span className="text-xs text-text-faint shrink-0 whitespace-nowrap">
-                            {lesson.kind ? LESSON_KIND_LABEL[lesson.kind] : null}
+                            {lesson.kind ? (
+                              <span
+                                className={
+                                  lesson.kind === "PRACTICE" ? "text-yolk-bright font-semibold" : undefined
+                                }
+                              >
+                                {LESSON_KIND_LABEL[lesson.kind]}
+                              </span>
+                            ) : null}
                             {lesson.kind && lesson.durationMinutes ? " · " : null}
                             {lesson.durationMinutes ? `${lesson.durationMinutes} мин` : null}
                           </span>
