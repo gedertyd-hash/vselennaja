@@ -3465,8 +3465,9 @@ ChatGPT вносит правку и сразу показывает обнов�
   },
   {
     slug: "claude-s-nulya-do-pro",
-    title: "Claude с нуля до PRO",
+    title: "Claude под ключ",
     description: "Системный курс: от первого запроса до рабочих процессов на Projects.",
+    coverImage: "/covers/course-claude-pod-klyuch.png",
     type: "COURSE",
     level: "BEGINNER",
     tag: "Claude",
