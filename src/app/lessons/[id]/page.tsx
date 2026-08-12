@@ -59,7 +59,11 @@ export default async function LessonPage({
 
       {(lesson.kind || lesson.durationMinutes) && (
         <p className="text-xs text-text-muted mt-1.5">
-          {lesson.kind ? LESSON_KIND_LABEL[lesson.kind] : null}
+          {lesson.kind ? (
+            <span className={lesson.kind === "PRACTICE" ? "text-yolk-bright font-semibold" : undefined}>
+              {LESSON_KIND_LABEL[lesson.kind]}
+            </span>
+          ) : null}
           {lesson.kind && lesson.durationMinutes ? " · " : null}
           {lesson.durationMinutes ? `${lesson.durationMinutes} мин` : null}
         </p>
