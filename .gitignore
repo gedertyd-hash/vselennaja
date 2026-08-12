@@ -53,3 +53,6 @@ __pycache__/
 scripts/ozon-seller/products.csv
 scripts/ozon-seller/analytics_traffic.csv
 scripts/ozon-seller/analytics_realization.json
+scripts/ozon-ads/campaigns.csv
+scripts/ozon-ads/campaign_stats.csv
+scripts/ozon-ads/campaign_stats.raw
