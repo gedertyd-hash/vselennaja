@@ -46,3 +46,10 @@ next-env.d.ts
 # local SQLite database
 *.db
 *.db-journal
+
+# python (scripts/ozon-seller)
+__pycache__/
+*.pyc
+scripts/ozon-seller/products.csv
+scripts/ozon-seller/analytics_traffic.csv
+scripts/ozon-seller/analytics_realization.json
