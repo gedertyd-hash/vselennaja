@@ -83,6 +83,7 @@ export default async function HomePage() {
                   createdAt: item.createdAt,
                   isNew: isNewMaterial(item.createdAt),
                   isFavorited: favoriteIds.has(item.id),
+                  coverImage: item.coverImage,
                 }}
               />
             ))}

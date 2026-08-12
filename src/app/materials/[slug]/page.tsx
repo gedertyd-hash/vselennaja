@@ -73,6 +73,16 @@ export default async function MaterialDetailPage({
           </span>
         )}
       </div>
+      {material.coverImage && (
+        <div className="mt-5 rounded-2xl overflow-hidden border border-border">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={material.coverImage}
+            alt={material.title}
+            className="w-full aspect-[16/7] object-cover"
+          />
+        </div>
+      )}
       <p className="text-text-muted mt-4 leading-relaxed">{material.description}</p>
     </>
   );

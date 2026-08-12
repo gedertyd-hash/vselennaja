@@ -83,6 +83,7 @@ export async function MaterialTypeListing({
                 createdAt: item.createdAt,
                 isNew: isNewMaterial(item.createdAt),
                 isFavorited: favoriteIds.has(item.id),
+                coverImage: item.coverImage,
               }}
             />
           ))}
