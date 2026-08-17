@@ -8746,6 +8746,8 @@ export async function seedDemoContent(prisma: PrismaClient) {
       },
     });
 
+    const keptModuleIds: string[] = [];
+
     let moduleOrder = 0;
     for (const mod of material.modules) {
       const existingModule = await prisma.module.findFirst({
@@ -8757,6 +8759,10 @@ export async function seedDemoContent(prisma: PrismaClient) {
         (await prisma.module.create({
           data: { courseId: course.id, title: mod.title, order: moduleOrder },
         }));
+
+      keptModuleIds.push(moduleRecord.id);
+
+      const keptSlugs = mod.lessons.map((lesson) => lesson.slug);
 
       let lessonOrder = 0;
       for (const lesson of mod.lessons) {
@@ -8785,8 +8791,20 @@ export async function seedDemoContent(prisma: PrismaClient) {
         });
         lessonOrder++;
       }
+
+      // Remove lessons left over from a previous version of this module (renamed/removed slugs).
+      await prisma.lesson.deleteMany({
+        where: { moduleId: moduleRecord.id, slug: { notIn: keptSlugs } },
+      });
+
       moduleOrder++;
     }
+
+    // Remove modules (and their lessons, via cascade) left over from a previous
+    // version of this course — e.g. a module that was later renamed.
+    await prisma.module.deleteMany({
+      where: { courseId: course.id, id: { notIn: keptModuleIds } },
+    });
   }
 
   return DEMO_MATERIALS.map((m) => m.slug);
