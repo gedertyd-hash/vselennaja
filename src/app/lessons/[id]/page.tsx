@@ -88,12 +88,16 @@ export default async function LessonPage({
 
       {lesson.videoUrl && (
         <div className="mt-6 aspect-video rounded-2xl overflow-hidden border border-border">
-          <iframe
-            src={lesson.videoUrl}
-            className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          {/\.(mp4|webm|ogg)$/.test(lesson.videoUrl) ? (
+            <video src={lesson.videoUrl} controls className="w-full h-full bg-black" />
+          ) : (
+            <iframe
+              src={lesson.videoUrl}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          )}
         </div>
       )}
 
