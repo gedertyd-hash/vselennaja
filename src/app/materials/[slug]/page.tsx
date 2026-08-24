@@ -101,12 +101,16 @@ export default async function MaterialDetailPage({
           <div className="mt-8">
             {lesson.videoUrl && (
               <div className="aspect-video rounded-2xl overflow-hidden border border-border mb-6">
-                <iframe
-                  src={lesson.videoUrl}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+                {/\.(mp4|webm|ogg)$/.test(lesson.videoUrl) ? (
+                  <video src={lesson.videoUrl} controls className="w-full h-full bg-black" />
+                ) : (
+                  <iframe
+                    src={lesson.videoUrl}
+                    className="w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                )}
               </div>
             )}
             {lesson.content && <MarkdownContent content={lesson.content} />}
