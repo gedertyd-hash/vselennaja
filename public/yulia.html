@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Юлия — ИИшница</title>
+<style>
+  :root {
+    --bg: #fbf3e7;
+    --card: #ffffff;
+    --ink: #3c2f24;
+    --muted: #7a6a5a;
+    --accent: #d1783f;
+    --accent-dark: #b8622c;
+    --border: #ecdfcc;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+  }
+
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 64px 24px 80px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: #f4e3cf;
+    color: var(--accent-dark);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 32px;
+    margin: 0 0 14px;
+    font-weight: 700;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 17px;
+    margin: 0;
+    max-width: 460px;
+    margin-inline: auto;
+  }
+
+  h2.section-title {
+    text-align: center;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin: 0 0 24px;
+  }
+
+  .cards {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .card .icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #f4e3cf;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .card h3 {
+    margin: 0 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+
+  .cta {
+    text-align: center;
+  }
+
+  .cta a {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 16px 40px;
+    border-radius: 999px;
+    box-shadow: 0 8px 20px rgba(209, 120, 63, 0.35);
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+
+  .cta a:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+
+  .cta p {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 64px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="badge">ИИшница · закрытый клуб</span>
+      <h1>Юлия</h1>
+      <p>Основательница закрытого клуба ИИшница — помогаю разобраться в ИИ без воды и лишней сложности.</p>
+    </header>
+
+    <h2 class="section-title">Чем могу помочь</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">💡</div>
+        <div>
+          <h3>Разобраться с ИИ-инструментами</h3>
+          <p>Покажу, какие инструменты реально работают и как встроить их в повседневные задачи.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🎯</div>
+        <div>
+          <h3>Личная консультация</h3>
+          <p>Разберём вашу ситуацию один на один и составим понятный план действий.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="icon">🤝</div>
+        <div>
+          <h3>Доступ в клуб ИИшница</h3>
+          <p>Гайды, курсы и живое сообщество, где можно спросить и получить поддержку.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <a href="#" id="telegram-link">Написать мне ✈️</a>
+      <p>Ссылка на телеграм временно не подключена</p>
+    </div>
+
+    <footer>Юлия · ИИшница</footer>
+  </div>
+</body>
+</html>
