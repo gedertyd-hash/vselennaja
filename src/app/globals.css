@@ -105,3 +105,10 @@ body {
   border-radius: 1rem;
   border: 1px solid var(--border);
 }
+
+.prose-iishnitsa mark {
+  background: var(--yolk);
+  color: var(--yolk-ink);
+  padding: 0.05em 0.2em;
+  border-radius: 0.25em;
+}
