@@ -99,7 +99,7 @@ export const DEMO_MATERIALS: MaterialDraft[] = [
     tag: "Claude",
     modules: singleLesson(
       "Claude для новичков",
-      `![Персонаж рядом с открытым чатом Claude](/guides/claude-chto-takoe-claude-hero.png)
+      `![Рабочий стол с ноутбуком, чат-пузырём и утренним солнцем — старт работы с Claude](/guides/claude-guide-hero-v2.png)
 
 Всё, что нужно, чтобы начать пользоваться Claude прямо сейчас — без опыта, без кода, без лишней теории.
 
