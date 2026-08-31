@@ -74,7 +74,7 @@ export default async function PublicGuidePage({
           <p className="font-display text-xl font-semibold mb-2">Хочешь идти дальше не вслепую?</p>
           <p className="text-text-muted mb-5 leading-relaxed">
             В клубе «ИИшница» — готовые шаблоны под разные роли, разбор Connectors, Cowork, Claude Code
-            и живое сообщество, где можно спросить. Подписка — 2490 ₽.
+            и живое сообщество, где можно спросить. Подписка — 2690 ₽/мес.
           </p>
           <Link
             href={CLUB_JOIN_LINK}
