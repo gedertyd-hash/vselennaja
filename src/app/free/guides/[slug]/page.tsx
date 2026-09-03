@@ -1,9 +1,32 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { MarkdownContent } from "@/components/MarkdownContent";
 
-const CLUB_JOIN_LINK = "#"; // TODO: заменить на реальную ссылку на клуб
+const CLUB_JOIN_URL = "#"; // TODO: заменить на реальную ссылку на клуб
+
+// Вставь этот маркер отдельной строкой в markdown гайда (demo-content.ts),
+// чтобы в этом месте вставился компактный inline-CTA в клуб.
+const CTA_MARKER = "<!--CTA-->";
+
+function InlineJoinCta() {
+  return (
+    <div className="my-8 rounded-2xl border border-yolk/30 bg-bg-elevated px-6 py-5 text-center">
+      <p className="text-text-muted mb-4 leading-relaxed">
+        Хочешь не просто читать про ИИ, а научиться использовать его в работе? Вступай в ИИшницу.
+      </p>
+      <Link
+        href={CLUB_JOIN_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block rounded-full bg-yolk text-yolk-ink font-medium px-6 py-2.5 hover:bg-yolk-bright transition"
+      >
+        Вступить в ИИшницу
+      </Link>
+    </div>
+  );
+}
 
 export default async function PublicGuidePage({
   params,
@@ -66,7 +89,13 @@ export default async function PublicGuidePage({
                 )}
               </div>
             )}
-            {lesson.content && <MarkdownContent content={lesson.content} />}
+            {lesson.content &&
+              lesson.content.split(CTA_MARKER).map((segment, i, segments) => (
+                <Fragment key={i}>
+                  {segment && <MarkdownContent content={segment} />}
+                  {i < segments.length - 1 && <InlineJoinCta />}
+                </Fragment>
+              ))}
           </div>
         )}
 
@@ -77,7 +106,7 @@ export default async function PublicGuidePage({
             и живое сообщество, где можно спросить. Подписка — 2690 ₽/мес.
           </p>
           <Link
-            href={CLUB_JOIN_LINK}
+            href={CLUB_JOIN_URL}
             className="inline-block rounded-full bg-yolk text-yolk-ink font-medium px-6 py-2.5 hover:bg-yolk-bright transition"
           >
             Вступить в клуб
