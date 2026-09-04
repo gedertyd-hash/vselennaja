@@ -3,8 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { MarkdownContent } from "@/components/MarkdownContent";
-
-const CLUB_JOIN_URL = "https://t.me/tribute/app?startapp=s14WE";
+import { CLUB_JOIN_URL } from "@/lib/constants";
 
 // Вставь этот маркер отдельной строкой в markdown гайда (demo-content.ts),
 // чтобы в этом месте вставился компактный inline-CTA в клуб.
