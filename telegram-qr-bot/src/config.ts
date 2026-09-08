@@ -18,4 +18,7 @@ export const config = {
     .filter(Boolean)
     .map(Number),
   dbPath: process.env.DB_PATH?.trim() || "./data/leads.db",
+  // По умолчанию — каждый понедельник в 10:00 по Москве.
+  broadcastCron: process.env.BROADCAST_CRON?.trim() || "0 10 * * 1",
+  broadcastTimezone: process.env.BROADCAST_TZ?.trim() || "Europe/Moscow",
 };

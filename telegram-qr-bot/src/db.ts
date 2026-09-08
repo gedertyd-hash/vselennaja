@@ -23,12 +23,17 @@ db.exec(`
   );
 `);
 
-// На случай базы, созданной до появления колонки marketplace.
-const hasMarketplaceColumn = (
-  db.prepare("PRAGMA table_info(leads)").all() as Array<{ name: string }>
-).some((col) => col.name === "marketplace");
-if (!hasMarketplaceColumn) {
+// На случай базы, созданной до появления новых колонок.
+const existingColumns = new Set(
+  (db.prepare("PRAGMA table_info(leads)").all() as Array<{ name: string }>).map(
+    (col) => col.name
+  )
+);
+if (!existingColumns.has("marketplace")) {
   db.exec("ALTER TABLE leads ADD COLUMN marketplace TEXT");
+}
+if (!existingColumns.has("blocked")) {
+  db.exec("ALTER TABLE leads ADD COLUMN blocked INTEGER NOT NULL DEFAULT 0");
 }
 
 export interface Lead {
@@ -85,6 +90,7 @@ export interface LeadRow {
   start_param: string | null;
   marketplace: string | null;
   prize: string | null;
+  blocked: number;
   first_seen_at: string;
   last_seen_at: string;
 }
@@ -92,7 +98,20 @@ export interface LeadRow {
 export function getAllLeads(): LeadRow[] {
   return db
     .prepare(
-      "SELECT telegram_id, username, first_name, start_param, marketplace, prize, first_seen_at, last_seen_at FROM leads ORDER BY first_seen_at DESC"
+      "SELECT telegram_id, username, first_name, start_param, marketplace, prize, blocked, first_seen_at, last_seen_at FROM leads ORDER BY first_seen_at DESC"
     )
     .all() as LeadRow[];
+}
+
+// Кому реально рассылать — без тех, кто уже заблокировал бота.
+export function getBroadcastTargets(): number[] {
+  return (
+    db.prepare("SELECT telegram_id FROM leads WHERE blocked = 0").all() as Array<{
+      telegram_id: number;
+    }>
+  ).map((row) => row.telegram_id);
+}
+
+export function markBlocked(telegramId: number): void {
+  db.prepare("UPDATE leads SET blocked = 1 WHERE telegram_id = ?").run(telegramId);
 }

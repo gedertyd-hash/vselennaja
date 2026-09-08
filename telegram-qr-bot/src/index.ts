@@ -1,7 +1,9 @@
 import { bot } from "./bot.js";
+import { scheduleBroadcast } from "./broadcast.js";
 
 async function main() {
   console.log("Бот запускается...");
+  scheduleBroadcast();
   await bot.start({
     onStart: (info) => console.log(`Бот @${info.username} запущен (long polling).`),
   });

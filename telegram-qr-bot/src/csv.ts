@@ -16,6 +16,7 @@ export function leadsToCsv(rows: LeadRow[]): string {
     "marketplace",
     "start_param",
     "prize",
+    "blocked_bot",
     "first_seen_at",
     "last_seen_at",
   ];
@@ -28,6 +29,7 @@ export function leadsToCsv(rows: LeadRow[]): string {
       marketplaceLabel(row.marketplace),
       row.start_param ?? "",
       row.prize ?? "",
+      row.blocked ? "да" : "нет",
       row.first_seen_at,
       row.last_seen_at,
     ]

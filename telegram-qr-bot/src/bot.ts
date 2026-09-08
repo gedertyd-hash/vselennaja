@@ -119,6 +119,23 @@ bot.command("export", async (ctx) => {
   });
 });
 
+bot.command("broadcast_preview", async (ctx) => {
+  if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
+  const { BROADCAST_TEXT } = await import("./broadcast-content.js");
+  await ctx.reply("Превью еженедельной рассылки (уйдёт только вам):");
+  await ctx.reply(BROADCAST_TEXT);
+});
+
+bot.command("broadcast_now", async (ctx) => {
+  if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
+  await ctx.reply("Запускаю рассылку всем подписчикам...");
+  const { runBroadcast } = await import("./broadcast.js");
+  const result = await runBroadcast();
+  await ctx.reply(
+    `Готово. Отправлено: ${result.sent}, заблокировали: ${result.blocked}, ошибок: ${result.failed}.`
+  );
+});
+
 bot.catch((err) => {
   console.error("Ошибка в обработчике бота:", err);
 });
