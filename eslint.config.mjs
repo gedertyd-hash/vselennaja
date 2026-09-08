@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Independent standalone project, not part of this Next.js app.
+    "telegram-qr-bot/**",
   ]),
 ]);
 

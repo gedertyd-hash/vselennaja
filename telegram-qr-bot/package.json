@@ -1,0 +1,24 @@
+{
+  "name": "telegram-qr-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Telegram-бот для QR-кода из упаковки: капсула-подарок -> переход в канал бренда, сбор базы подписчиков.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc -p tsconfig.json",
+    "stats": "tsx src/stats.ts"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.9.1",
+    "dotenv": "^16.4.7",
+    "grammy": "^1.30.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
+}
