@@ -92,18 +92,6 @@ bot.callbackQuery(new RegExp(`^mp:(${MARKETPLACE_CODES}):(.*)$`), async (ctx) =>
   await sendClosedSpaceStep(ctx, config.brandName);
 });
 
-// Свободный текст — используется только для ответа "Другой вариант".
-// Всё остальное молча игнорируется (не мешает командам — они матчатся раньше).
-bot.on("message:text", async (ctx) => {
-  const user = ctx.from;
-  if (!user || !isAwaitingCustomMarketplace(user.id)) return;
-
-  updateMarketplace(user.id, ctx.message.text.trim().slice(0, 200));
-  setAwaitingCustomMarketplace(user.id, false);
-
-  await sendClosedSpaceStep(ctx, config.brandName);
-});
-
 bot.callbackQuery(/^d1:(like|getting_used)$/, async (ctx) => {
   const user = ctx.from;
   if (!user) return;
@@ -217,6 +205,20 @@ bot.command("funnel_preview", async (ctx) => {
   await ctx.reply(WEEK1_TEXT, { reply_markup: buildWeek1Keyboard() });
   await ctx.reply("Превью «через месяц»:");
   await ctx.reply(MONTH1_TEXT);
+});
+
+// Свободный текст — используется только для ответа "Другой вариант".
+// Зарегистрирован ПОСЛЕ всех команд: иначе он матчит любой текст, включая
+// команды типа /stats, и молча проглатывает их (grammy не идёт к следующему
+// обработчику, если этот отработал и не позвал next()).
+bot.on("message:text", async (ctx) => {
+  const user = ctx.from;
+  if (!user || !isAwaitingCustomMarketplace(user.id)) return;
+
+  updateMarketplace(user.id, ctx.message.text.trim().slice(0, 200));
+  setAwaitingCustomMarketplace(user.id, false);
+
+  await sendClosedSpaceStep(ctx, config.brandName);
 });
 
 bot.catch((err) => {
