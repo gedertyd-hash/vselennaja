@@ -1,8 +1,13 @@
 export const MARKETPLACES = [
-  { code: "wb", label: "Wildberries" },
-  { code: "ozon", label: "Ozon" },
-  { code: "ym", label: "Яндекс Маркет" },
+  { code: "wb", label: "🤍 Wildberries" },
+  { code: "ozon", label: "🤍 Ozon" },
+  { code: "ym", label: "🤍 Яндекс Маркет" },
+  { code: "other", label: "Другой вариант" },
 ] as const;
+
+// "other" не даёт готовую метку — пользователь вводит текст сам,
+// он и попадает в поле marketplace вместо кода.
+export const CUSTOM_MARKETPLACE_CODE = "other";
 
 export type MarketplaceCode = (typeof MARKETPLACES)[number]["code"];
 

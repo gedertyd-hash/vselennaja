@@ -12,6 +12,9 @@ export const config = {
   botToken: required("BOT_TOKEN"),
   brandName: process.env.BRAND_NAME?.trim() || "Бренд",
   channelUrl: required("CHANNEL_URL"),
+  // Ссылка на тг тех поддержки для кнопки "Есть вопрос" (t.me/username).
+  // Если не задана, кнопка поведёт в канал бренда — см. использование в bot.ts.
+  supportUrl: process.env.SUPPORT_URL?.trim() || "",
   adminIds: (process.env.ADMIN_IDS ?? "")
     .split(",")
     .map((id) => id.trim())
