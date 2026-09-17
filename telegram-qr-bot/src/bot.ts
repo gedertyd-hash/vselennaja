@@ -181,8 +181,11 @@ bot.command("export", async (ctx) => {
 
 bot.command("broadcast_preview", async (ctx) => {
   if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
-  const { BROADCAST_TEXT } = await import("./broadcast-content.js");
-  await ctx.reply("Превью еженедельной рассылки (уйдёт только вам):");
+  const { BROADCAST_TEXT, BROADCAST_READY } = await import("./broadcast-content.js");
+  const status = BROADCAST_READY
+    ? "✅ готова к отправке подписчикам"
+    : "⛔ НЕ уйдёт подписчикам (BROADCAST_READY = false)";
+  await ctx.reply(`Превью еженедельной рассылки (уйдёт только вам). Статус: ${status}`);
   await ctx.reply(BROADCAST_TEXT);
 });
 
@@ -198,12 +201,15 @@ bot.command("broadcast_now", async (ctx) => {
 
 bot.command("funnel_preview", async (ctx) => {
   if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
-  const { MONTH1_TEXT } = await import("./funnel-content.js");
+  const { MONTH1_TEXT, MONTH1_READY } = await import("./funnel-content.js");
   await ctx.reply("Превью «через день» (уйдёт только вам):");
   await ctx.reply(DAY1_TEXT, { reply_markup: buildDay1Keyboard() });
   await ctx.reply("Превью «через неделю»:");
   await ctx.reply(WEEK1_TEXT, { reply_markup: buildWeek1Keyboard() });
-  await ctx.reply("Превью «через месяц»:");
+  const status = MONTH1_READY
+    ? "✅ готово к отправке"
+    : "⛔ НЕ уйдёт подписчикам (MONTH1_READY = false)";
+  await ctx.reply(`Превью «через месяц». Статус: ${status}`);
   await ctx.reply(MONTH1_TEXT);
 });
 

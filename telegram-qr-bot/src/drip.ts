@@ -1,7 +1,8 @@
 import cron from "node-cron";
 import { GrammyError } from "grammy";
 import { bot, buildDay1Keyboard, buildWeek1Keyboard, DAY1_TEXT, WEEK1_TEXT } from "./bot.js";
-import { MONTH1_TEXT } from "./funnel-content.js";
+import { config } from "./config.js";
+import { MONTH1_TEXT, MONTH1_READY } from "./funnel-content.js";
 import {
   getDueDay1,
   getDueWeek1,
@@ -34,6 +35,10 @@ async function sendStep(
   }
 }
 
+// Чтобы не слать это предупреждение админам каждые 15 минут, пока
+// MONTH1_READY остаётся false, — только один раз за время работы процесса.
+let month1WarningSent = false;
+
 export async function runDripCheck(): Promise<void> {
   for (const telegramId of getDueDay1()) {
     const result = await sendStep(telegramId, DAY1_TEXT, buildDay1Keyboard());
@@ -47,10 +52,26 @@ export async function runDripCheck(): Promise<void> {
     await sleep(50);
   }
 
-  for (const telegramId of getDueMonth1()) {
-    const result = await sendStep(telegramId, MONTH1_TEXT);
-    if (result !== "failed") markMonth1Sent(telegramId);
-    await sleep(50);
+  const dueMonth1 = getDueMonth1();
+  if (dueMonth1.length === 0) {
+    // ничего не просрочено — нечего делать
+  } else if (!MONTH1_READY) {
+    if (!month1WarningSent) {
+      month1WarningSent = true;
+      const warning =
+        `⚠️ ${dueMonth1.length} подписчик(ов) уже пора получить сообщение "через месяц", ` +
+        `но MONTH1_READY = false в src/funnel-content.ts — им ничего не отправлено. ` +
+        `Замените MONTH1_TEXT на реальный анонс и поставьте MONTH1_READY = true.`;
+      for (const adminId of config.adminIds) {
+        await bot.api.sendMessage(adminId, warning).catch(() => undefined);
+      }
+    }
+  } else {
+    for (const telegramId of dueMonth1) {
+      const result = await sendStep(telegramId, MONTH1_TEXT);
+      if (result !== "failed") markMonth1Sent(telegramId);
+      await sleep(50);
+    }
   }
 }
 

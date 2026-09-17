@@ -2,7 +2,7 @@ import cron from "node-cron";
 import { GrammyError } from "grammy";
 import { bot } from "./bot.js";
 import { config } from "./config.js";
-import { BROADCAST_TEXT } from "./broadcast-content.js";
+import { BROADCAST_TEXT, BROADCAST_READY } from "./broadcast-content.js";
 import { getBroadcastTargets, markBlocked } from "./db.js";
 
 function sleep(ms: number): Promise<void> {
@@ -34,6 +34,18 @@ async function sendOne(telegramId: number): Promise<"sent" | "blocked" | "failed
 }
 
 export async function runBroadcast(): Promise<{ sent: number; blocked: number; failed: number }> {
+  if (!BROADCAST_READY) {
+    const warning =
+      "⚠️ Еженедельная рассылка НЕ отправлена: BROADCAST_READY = false в " +
+      "src/broadcast-content.ts. Замените BROADCAST_TEXT на реальный текст и " +
+      "поставьте BROADCAST_READY = true — иначе рассылка продолжит пропускаться " +
+      "каждый понедельник.";
+    for (const adminId of config.adminIds) {
+      await bot.api.sendMessage(adminId, warning).catch(() => undefined);
+    }
+    return { sent: 0, blocked: 0, failed: 0 };
+  }
+
   const targets = getBroadcastTargets();
   let sent = 0;
   let blocked = 0;
