@@ -141,15 +141,6 @@ export function getAllLeads(): LeadRow[] {
     .all() as LeadRow[];
 }
 
-// Кому реально рассылать — без тех, кто уже заблокировал бота.
-export function getBroadcastTargets(): number[] {
-  return (
-    db.prepare("SELECT telegram_id FROM leads WHERE blocked = 0").all() as Array<{
-      telegram_id: number;
-    }>
-  ).map((row) => row.telegram_id);
-}
-
 export function markBlocked(telegramId: number): void {
   db.prepare("UPDATE leads SET blocked = 1 WHERE telegram_id = ?").run(telegramId);
 }

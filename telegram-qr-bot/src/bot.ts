@@ -139,8 +139,9 @@ export function buildWeek1Keyboard(): InlineKeyboard {
 
 export { DAY1_TEXT, WEEK1_TEXT };
 
-bot.command("stats", async (ctx) => {
-  if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
+// Общий текст статистики — используется и командой /stats, и еженедельным
+// отчётом админам (src/weekly-report.ts).
+export async function buildStatsText(): Promise<string> {
   const { countLeads, countByMarketplace, countByDay1Response, countByWeek1Response } =
     await import("./db.js");
   const total = countLeads();
@@ -153,12 +154,17 @@ bot.command("stats", async (ctx) => {
   const byWeek1 = countByWeek1Response()
     .map((row) => `  ${row.week1_response ?? "(нет ответа)"}: ${row.n}`)
     .join("\n");
-  await ctx.reply(
+  return (
     `Всего в базе: ${total}\n\n` +
-      `По маркетплейсам:\n${byMarketplace || "  пусто"}\n\n` +
-      `Ответы "через день":\n${byDay1 || "  ещё нет"}\n\n` +
-      `Ответы "через неделю":\n${byWeek1 || "  ещё нет"}`
+    `По маркетплейсам:\n${byMarketplace || "  пусто"}\n\n` +
+    `Ответы "через день":\n${byDay1 || "  ещё нет"}\n\n` +
+    `Ответы "через неделю":\n${byWeek1 || "  ещё нет"}`
   );
+}
+
+bot.command("stats", async (ctx) => {
+  if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
+  await ctx.reply(await buildStatsText());
 });
 
 bot.command("export", async (ctx) => {
@@ -179,24 +185,11 @@ bot.command("export", async (ctx) => {
   });
 });
 
-bot.command("broadcast_preview", async (ctx) => {
+bot.command("weekly_report_now", async (ctx) => {
   if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
-  const { BROADCAST_TEXT, BROADCAST_READY } = await import("./broadcast-content.js");
-  const status = BROADCAST_READY
-    ? "✅ готова к отправке подписчикам"
-    : "⛔ НЕ уйдёт подписчикам (BROADCAST_READY = false)";
-  await ctx.reply(`Превью еженедельной рассылки (уйдёт только вам). Статус: ${status}`);
-  await ctx.reply(BROADCAST_TEXT);
-});
-
-bot.command("broadcast_now", async (ctx) => {
-  if (!ctx.from || !config.adminIds.includes(ctx.from.id)) return;
-  await ctx.reply("Запускаю рассылку всем подписчикам...");
-  const { runBroadcast } = await import("./broadcast.js");
-  const result = await runBroadcast();
-  await ctx.reply(
-    `Готово. Отправлено: ${result.sent}, заблокировали: ${result.blocked}, ошибок: ${result.failed}.`
-  );
+  const { sendWeeklyReport } = await import("./weekly-report.js");
+  await sendWeeklyReport();
+  await ctx.reply("Готово — еженедельный отчёт отправлен админам (см. выше/отдельным сообщением).");
 });
 
 bot.command("funnel_preview", async (ctx) => {

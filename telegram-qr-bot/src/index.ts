@@ -1,10 +1,10 @@
 import { bot } from "./bot.js";
-import { scheduleBroadcast } from "./broadcast.js";
+import { scheduleWeeklyReport } from "./weekly-report.js";
 import { scheduleDrip } from "./drip.js";
 
 async function main() {
   console.log("Бот запускается...");
-  scheduleBroadcast();
+  scheduleWeeklyReport();
   scheduleDrip();
   await bot.start({
     onStart: (info) => console.log(`Бот @${info.username} запущен (long polling).`),
